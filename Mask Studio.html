@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBS Mask Studio - Professional Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-main: #09090b;
+            --panel-bg: rgba(24, 24, 27, 0.85);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-main); 
+            color: #ececec; 
+            overflow: hidden; 
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://i.imgur.com/ypKK0F8.png');
+            background-size: cover;
+            z-index: -1;
+            opacity: 0.1;
+            filter: grayscale(1);
+            animation: slowBreathe 30s ease-in-out infinite;
+        }
+
+        @keyframes slowBreathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+        }
+
+        .canvas-container { 
+            position: relative;
+            cursor: crosshair;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            min-height: 0; 
+            flex-grow: 1;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        canvas { 
+            max-width: 100%; 
+            max-height: 100%; 
+            object-fit: contain;
+            display: block;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 4px;
+            background: #27272a;
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .layer-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 38px;
+            height: 22px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #27272a; transition: .3s; border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute; content: "";
+            height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: #a1a1aa; transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #fff; }
+        input:checked + .slider:before { transform: translateX(16px); background-color: #000; }
+
+        .controls-disabled {
+            opacity: 0.3;
+            pointer-events: none;
+            filter: grayscale(1);
+            transition: all 0.3s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 14px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-6">
+
+    <div class="animated-bg"></div>
+
+    <header class="max-w-[1600px] w-full mx-auto flex flex-col md:flex-row justify-between items-center mb-6 gap-4 shrink-0">
+        <div>
+            <h1 class="text-2xl font-extrabold text-white tracking-tighter flex items-center gap-2">
+                <i data-lucide="shapes" class="w-7 h-7"></i>
+                MASK <span class="font-light opacity-50">STUDIO</span>
+            </h1>
+        </div>
+        
+        <div class="flex gap-1 p-1 bg-zinc-900/50 rounded-full border border-zinc-800">
+            <button id="canvasLandscape" class="flex items-center gap-2 px-6 py-2 text-[10px] font-bold rounded-full transition-all">
+                <i data-lucide="monitor" class="w-3 h-3"></i> LANDSCAPE
+            </button>
+            <button id="canvasPortrait" class="flex items-center gap-2 px-6 py-2 text-[10px] font-bold rounded-full transition-all">
+                <i data-lucide="smartphone" class="w-3 h-3"></i> PORTRAIT
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-[1600px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow overflow-hidden">
+        
+        <aside class="lg:col-span-4 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-1">
+            
+            <div class="glass-panel p-5">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Ebenen</h3>
+                    <div class="flex gap-2">
+                        <button id="resetAllBtn" class="bg-zinc-800 hover:bg-zinc-700 text-white text-[10px] px-4 py-2 rounded-full font-bold flex items-center gap-2 transition-colors">
+                            <i data-lucide="refresh-cw" class="w-3 h-3"></i> RESET
+                        </button>
+                        <button id="addLayerBtn" class="bg-white text-black text-[10px] px-4 py-2 rounded-full font-bold flex items-center gap-2 transition-transform active:scale-95">
+                            <i data-lucide="plus" class="w-3 h-3"></i> NEU
+                        </button>
+                    </div>
+                </div>
+                <div id="layerList" class="space-y-2 max-h-[140px] overflow-y-auto custom-scrollbar"></div>
+            </div>
+
+            <div id="settingsPanel" class="glass-panel p-6 space-y-6 flex-grow">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-zinc-500 uppercase mb-3">Form Typ</label>
+                        <select id="shapeSelect" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs font-semibold text-white outline-none">
+                            <option value="rect">Rechteck</option>
+                            <option value="circle">Ellipse</option>
+                            <option value="triangle">Dreieck</option>
+                            <option value="poly5">Fünfeck</option>
+                            <option value="poly6">Sechseck</option>
+                            <option value="star">Stern</option>
+                            <option value="diamond">Raute</option>
+                            <option value="timmybon">Special: Timmybon</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-zinc-500 uppercase mb-3">Format Preset</label>
+                        <select id="presetSelect" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-xs font-semibold text-white outline-none">
+                            <option value="custom">Benutzerdefiniert</option>
+                            <option value="16-9">YouTube (16:9)</option>
+                            <option value="9-16">TikTok (9:16)</option>
+                            <option value="1-1">Instagram (1:1)</option>
+                            <option value="4-3">Classic (4:3)</option>
+                            <option value="21-9">Ultrawide (21:9)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Neuer Skalierungs-Regler -->
+                <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800/50">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[10px] text-zinc-400 font-black uppercase">Master Skalierung (Zoom)</span>
+                        <span id="valScale" class="text-xs font-mono text-white">100%</span>
+                    </div>
+                    <input type="range" id="inputScale" min="10" max="250" value="100" class="w-full">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center"><span class="text-[10px] text-zinc-500 font-bold uppercase">Breite</span><span id="valWidth" class="text-xs font-mono">1000</span></div>
+                        <input type="range" id="inputWidth" min="10" max="2500" value="1000" class="w-full">
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center"><span class="text-[10px] text-zinc-500 font-bold uppercase">Höhe</span><span id="valHeight" class="text-xs font-mono">1000</span></div>
+                        <input type="range" id="inputHeight" min="10" max="2500" value="1000" class="w-full">
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center"><span class="text-[10px] text-zinc-500 font-bold uppercase">Rotation</span><span id="valRotation" class="text-xs font-mono">0°</span></div>
+                        <input type="range" id="inputRotation" min="0" max="360" value="0" class="w-full">
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center"><span class="text-[10px] text-zinc-500 font-bold uppercase">Kanten abrunden</span><span id="valRadius" class="text-xs font-mono">50</span></div>
+                        <input type="range" id="inputRadius" min="0" max="500" value="50" class="w-full">
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-zinc-800 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Leuchten / Glow</h4>
+                        <label class="switch">
+                            <input type="checkbox" id="shadowToggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div id="shadowControls" class="grid grid-cols-2 gap-4 transition-all duration-300">
+                        <div class="space-y-2">
+                            <label class="text-[10px] text-zinc-500 font-bold uppercase">Farbe</label>
+                            <input type="color" id="inputShadowColor" value="#ffffff" class="w-full h-8 bg-zinc-950 border-none rounded p-0 overflow-hidden cursor-pointer">
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center"><span class="text-[10px] text-zinc-500 font-bold uppercase">Stärke</span><span id="valBlur" class="text-xs font-mono">0</span></div>
+                            <input type="range" id="inputShadowBlur" min="0" max="300" value="0" class="w-full">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex flex-col gap-2">
+                    <button id="downloadBtn" class="w-full bg-white text-black font-black py-4 rounded-xl flex items-center justify-center gap-3 text-xs tracking-widest transition-transform active:scale-95 shadow-lg shadow-white/5">
+                        <i data-lucide="download" class="w-4 h-4"></i> DOWNLOAD PNG
+                    </button>
+                    <button id="deleteLayerBtn" class="w-full text-zinc-500 hover:text-red-400 text-[9px] font-bold py-1 transition-colors">EBENE LÖSCHEN</button>
+                </div>
+            </div>
+        </aside>
+
+        <section class="lg:col-span-8 flex flex-col min-h-0">
+            <div id="viewport" class="canvas-container shadow-2xl">
+                <canvas id="maskCanvas"></canvas>
+                
+                <div class="absolute bottom-6 flex gap-3 px-4 w-full justify-center pointer-events-none">
+                    <button id="centerBtn" class="pointer-events-auto bg-black/80 hover:bg-white hover:text-black text-white px-5 py-2.5 rounded-full border border-white/10 text-[10px] font-bold flex items-center gap-2 transition-all">
+                        <i data-lucide="focus" class="w-3.5 h-3.5"></i> ZENTRIEREN
+                    </button>
+                    <div class="bg-black/60 px-5 py-2.5 rounded-full border border-white/10 text-[10px] font-mono text-zinc-300 flex items-center gap-2 backdrop-blur-md">
+                         <i data-lucide="maximize" class="w-3 h-3"></i>
+                         <span id="canvasResLabel">1920 x 1080 PX</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const canvas = document.getElementById('maskCanvas');
+        const ctx = canvas.getContext('2d');
+        let workspaceW = 1920, workspaceH = 1080;
+        let layers = [], selectedLayerId = null;
+
+        const layerList = document.getElementById('layerList'),
+              shapeSelect = document.getElementById('shapeSelect'),
+              presetSelect = document.getElementById('presetSelect'),
+              inputWidth = document.getElementById('inputWidth'),
+              inputHeight = document.getElementById('inputHeight'),
+              inputScale = document.getElementById('inputScale'),
+              inputRotation = document.getElementById('inputRotation'),
+              inputRadius = document.getElementById('inputRadius'),
+              shadowToggle = document.getElementById('shadowToggle'),
+              shadowControls = document.getElementById('shadowControls'),
+              inputShadowColor = document.getElementById('inputShadowColor'),
+              inputShadowBlur = document.getElementById('inputShadowBlur'),
+              landscapeBtn = document.getElementById('canvasLandscape'),
+              portraitBtn = document.getElementById('canvasPortrait'),
+              addLayerBtn = document.getElementById('addLayerBtn'),
+              deleteLayerBtn = document.getElementById('deleteLayerBtn'),
+              downloadBtn = document.getElementById('downloadBtn'),
+              centerBtn = document.getElementById('centerBtn'),
+              resetAllBtn = document.getElementById('resetAllBtn'),
+              canvasResLabel = document.getElementById('canvasResLabel');
+
+        function drawPolygon(ctx, sides, w, h, radius) {
+            const pts = [];
+            for (let i = 0; i < sides; i++) {
+                const a = (i * 2 * Math.PI) / sides - Math.PI / 2;
+                pts.push({ x: (w/2) * Math.cos(a), y: (h/2) * Math.sin(a) });
+            }
+            ctx.beginPath();
+            if (radius <= 0) {
+                ctx.moveTo(pts[0].x, pts[0].y);
+                for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+                ctx.closePath();
+            } else {
+                const len = pts.length;
+                for (let i = 0; i < len; i++) {
+                    const p1 = pts[i], p2 = pts[(i + 1) % len], p3 = pts[(i + 2) % len];
+                    const m1 = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+                    const m2 = { x: (p2.x + p3.x) / 2, y: (p2.y + p3.y) / 2 };
+                    if (i === 0) ctx.moveTo(m1.x, m1.y);
+                    ctx.arcTo(p2.x, p2.y, m2.x, m2.y, radius);
+                }
+                ctx.closePath();
+            }
+            ctx.fill();
+        }
+
+        function drawRoundedStar(ctx, w, h, radius) {
+            const spikes = 5;
+            const outerRadW = w / 2;
+            const outerRadH = h / 2;
+            // Verhältnis angepasst für einen weniger spitzen Stern (0.5 statt 0.4)
+            const innerRadW = outerRadW * 0.52; 
+            const innerRadH = outerRadH * 0.52;
+            const step = Math.PI / spikes;
+            const pts = [];
+
+            for (let i = 0; i < spikes * 2; i++) {
+                const rW = i % 2 === 0 ? outerRadW : innerRadW;
+                const rH = i % 2 === 0 ? outerRadH : innerRadH;
+                const a = i * step - Math.PI / 2;
+                pts.push({ x: Math.cos(a) * rW, y: Math.sin(a) * rH });
+            }
+
+            ctx.beginPath();
+            if (radius <= 0) {
+                ctx.moveTo(pts[0].x, pts[0].y);
+                for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+                ctx.closePath();
+            } else {
+                const len = pts.length;
+                for (let i = 0; i < len; i++) {
+                    const p1 = pts[i], p2 = pts[(i + 1) % len], p3 = pts[(i + 2) % len];
+                    const m1 = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+                    const m2 = { x: (p2.x + p3.x) / 2, y: (p2.y + p3.y) / 2 };
+                    if (i === 0) ctx.moveTo(m1.x, m1.y);
+                    ctx.arcTo(p2.x, p2.y, m2.x, m2.y, radius);
+                }
+                ctx.closePath();
+            }
+            ctx.fill();
+        }
+
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            layers.forEach(l => {
+                ctx.save();
+                ctx.translate(l.x, l.y);
+                ctx.rotate((l.rot * Math.PI) / 180);
+                if (l.shadowEnabled) {
+                    ctx.shadowColor = l.shadowColor;
+                    ctx.shadowBlur = l.shadowBlur;
+                }
+                ctx.fillStyle = '#fff';
+                const r = Math.min(l.radius, l.w / 2, l.h / 2);
+
+                if (l.type === 'rect') {
+                    ctx.beginPath(); ctx.roundRect(-l.w/2, -l.h/2, l.w, l.h, r); ctx.fill();
+                } else if (l.type === 'circle') {
+                    ctx.beginPath(); ctx.ellipse(0, 0, l.w/2, l.h/2, 0, 0, Math.PI*2); ctx.fill();
+                } else if (l.type === 'timmybon') {
+                    ctx.beginPath(); ctx.ellipse(0, 0, l.w/2, l.h/2, 0, 0, Math.PI*2); ctx.fill();
+                    const wo = l.w * 0.45;
+                    ctx.ellipse(wo, 0, l.w*0.15, l.h*0.25, 0, 0, Math.PI*2);
+                    ctx.ellipse(-wo, 0, l.w*0.15, l.h*0.25, 0, 0, Math.PI*2); ctx.fill();
+                } else if (l.type === 'star') {
+                    drawRoundedStar(ctx, l.w, l.h, l.radius);
+                } else if (l.type === 'triangle') drawPolygon(ctx, 3, l.w, l.h, l.radius);
+                else if (l.type === 'diamond') drawPolygon(ctx, 4, l.w, l.h, l.radius);
+                else if (l.type.startsWith('poly')) drawPolygon(ctx, parseInt(l.type.slice(4)), l.w, l.h, l.radius);
+                
+                ctx.restore();
+            });
+        }
+
+        function addLayer(type = 'rect') {
+            const id = Date.now();
+            layers.push({
+                id, type, x: workspaceW/2, y: workspaceH/2,
+                w: 800, h: 800, rot: 0, radius: 40, scale: 100,
+                shadowEnabled: false, shadowColor: '#ffffff', shadowBlur: 40
+            });
+            selectedLayerId = id;
+            updateUI(); render();
+        }
+
+        function updateUI() {
+            layerList.innerHTML = '';
+            layers.forEach(l => {
+                const div = document.createElement('div');
+                div.className = `layer-item flex items-center justify-between p-3 rounded-xl border border-zinc-800 cursor-pointer ${l.id === selectedLayerId ? 'active' : 'bg-zinc-950/20'}`;
+                div.innerHTML = `<span class="text-[10px] font-black uppercase text-zinc-300">${l.type}</span>`;
+                div.onclick = () => { selectedLayerId = l.id; updateUI(); };
+                layerList.appendChild(div);
+            });
+            syncControls();
+        }
+
+        function syncControls() {
+            const l = layers.find(li => li.id === selectedLayerId);
+            if (!l) return;
+            shapeSelect.value = l.type;
+            inputWidth.value = l.w; 
+            inputHeight.value = l.h;
+            inputScale.value = l.scale || 100;
+            inputRotation.value = l.rot; 
+            inputRadius.value = l.radius;
+            shadowToggle.checked = l.shadowEnabled;
+            inputShadowColor.value = l.shadowColor; 
+            inputShadowBlur.value = l.shadowBlur;
+
+            if (!l.shadowEnabled) shadowControls.classList.add('controls-disabled');
+            else shadowControls.classList.remove('controls-disabled');
+
+            document.getElementById('valWidth').textContent = Math.round(l.w);
+            document.getElementById('valHeight').textContent = Math.round(l.h);
+            document.getElementById('valScale').textContent = (l.scale || 100) + "%";
+            document.getElementById('valRotation').textContent = l.rot + "°";
+            document.getElementById('valRadius').textContent = l.radius;
+            document.getElementById('valBlur').textContent = l.shadowBlur;
+        }
+
+        function setWorkspace(w, h) {
+            workspaceW = w; workspaceH = h;
+            canvas.width = w; canvas.height = h;
+            canvasResLabel.textContent = `${w} x ${h} PX`;
+            landscapeBtn.className = `px-6 py-2 text-[10px] font-bold rounded-full transition-all ${w===1920?'bg-white text-black':'text-zinc-500'}`;
+            portraitBtn.className = `px-6 py-2 text-[10px] font-bold rounded-full transition-all ${w===1080?'bg-white text-black':'text-zinc-500'}`;
+            
+            layers.forEach(l => {
+                l.x = workspaceW / 2;
+                l.y = workspaceH / 2;
+            });
+            
+            render();
+        }
+
+        presetSelect.onchange = () => {
+            const l = layers.find(li => li.id === selectedLayerId);
+            if (!l) return;
+            const val = presetSelect.value;
+            if (val === '16-9') { l.w = 1200; l.h = 675; }
+            else if (val === '9-16') { l.w = 675; l.h = 1200; }
+            else if (val === '1-1') { l.w = 800; l.h = 800; }
+            else if (val === '4-3') { l.w = 1000; l.h = 750; }
+            else if (val === '21-9') { l.w = 1400; l.h = 600; }
+            l.scale = 100; // Reset Scale on preset change
+            syncControls(); render();
+        }
+
+        landscapeBtn.onclick = () => setWorkspace(1920, 1080);
+        portraitBtn.onclick = () => setWorkspace(1080, 1920);
+        centerBtn.onclick = () => { 
+            const l = layers.find(li => li.id === selectedLayerId);
+            if(l){ l.x = workspaceW/2; l.y = workspaceH/2; render(); }
+        };
+        
+        resetAllBtn.onclick = () => {
+            layers = [];
+            addLayer();
+        };
+
+        const updateData = (e) => {
+            const l = layers.find(li => li.id === selectedLayerId);
+            if (l) {
+                if (e && e.target === shapeSelect) {
+                    l.type = shapeSelect.value;
+                    l.w = 800; l.h = 800; l.scale = 100;
+                    l.rot = 0; l.radius = 40;
+                    l.shadowEnabled = false;
+                    l.shadowBlur = 0;
+                    presetSelect.value = 'custom';
+                } else if (e && e.target === inputScale) {
+                    const newScale = +inputScale.value;
+                    const factor = newScale / (l.scale || 100);
+                    l.w *= factor;
+                    l.h *= factor;
+                    l.scale = newScale;
+                } else {
+                    l.type = shapeSelect.value;
+                    l.w = +inputWidth.value; 
+                    l.h = +inputHeight.value;
+                    l.rot = +inputRotation.value; 
+                    l.radius = +inputRadius.value;
+                    l.shadowEnabled = shadowToggle.checked;
+                    l.shadowColor = inputShadowColor.value; 
+                    l.shadowBlur = +inputShadowBlur.value;
+                    
+                    if (e && (e.target === inputWidth || e.target === inputHeight)) {
+                        presetSelect.value = 'custom';
+                        l.scale = 100; // Reset scale text if manually adjusted
+                    }
+                }
+                syncControls(); render();
+            }
+        };
+
+        [shapeSelect, inputWidth, inputHeight, inputScale, inputRotation, inputRadius, shadowToggle, inputShadowColor, inputShadowBlur].forEach(el => el.oninput = updateData);
+
+        addLayerBtn.onclick = () => addLayer();
+        deleteLayerBtn.onclick = () => {
+            if (layers.length <= 1) return;
+            layers = layers.filter(l => l.id !== selectedLayerId);
+            selectedLayerId = layers[0]?.id || null; updateUI(); render();
+        };
+
+        let isDragging = false;
+        canvas.addEventListener('mousedown', (e) => {
+            const r = canvas.getBoundingClientRect();
+            const sx = canvas.width / r.width, sy = canvas.height / r.height;
+            const mx = (e.clientX - r.left) * sx, my = (e.clientY - r.top) * sy;
+            for(let i=layers.length-1; i>=0; i--){
+                const l = layers[i];
+                if(Math.abs(mx-l.x) < l.w/2 && Math.abs(my-l.y) < l.h/2){
+                    selectedLayerId = l.id; isDragging = true; updateUI(); break;
+                }
+            }
+        });
+        window.addEventListener('mousemove', (e) => {
+            if(isDragging){
+                const r = canvas.getBoundingClientRect();
+                const sx = canvas.width / r.width, sy = canvas.height / r.height;
+                const l = layers.find(li => li.id === selectedLayerId);
+                if(l) { l.x = (e.clientX - r.left) * sx; l.y = (e.clientY - r.top) * sy; render(); }
+            }
+        });
+        window.addEventListener('mouseup', () => isDragging = false);
+
+        downloadBtn.onclick = () => {
+            const link = document.createElement('a');
+            link.download = `mask_${workspaceW}x${workspaceH}.png`;
+            link.href = canvas.toDataURL(); link.click();
+        };
+
+        window.onload = () => { lucide.createIcons(); setWorkspace(1920, 1080); addLayer(); };
+    </script>
+</body>
+</html>
