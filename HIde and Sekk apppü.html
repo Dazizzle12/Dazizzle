@@ -37,13 +37,12 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            /* Sanfter linearer Zoom ohne Zittern */
             animation: smoothZoom 40s linear infinite alternate;
             will-change: transform;
             transition: background-image 0.8s ease-in-out;
-            background-color: #111;
-            /* Nur eine leichte Abdunklung, kein Raster-Effekt mehr */
-            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("https://i.imgur.com/ypKK0F8.png");
+            background-color: #050505;
+            /* ABDUNKLUNG: Auf 0.85 erhöht für einen noch stärkeren Fokus auf den Vordergrund */
+            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url("https://i.imgur.com/ypKK0F8.png");
         }
 
         @keyframes smoothZoom {
@@ -65,7 +64,6 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
-            /* Der Scanline-Effekt (body::before) wurde hier entfernt */
         }
 
         /* HEADER & NAVIGATION */
@@ -440,34 +438,11 @@
             max-height: 400px;
             overflow-y: auto;
         }
-        
-        .type-tag {
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-        .tag-global { background: #555; }
-        .tag-kingdom { background: var(--neon-blue); color: black; }
-
-        .upload-status {
-            position: fixed;
-            bottom: 20px;
-            background: var(--neon-green);
-            color: black;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            z-index: 100;
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
     </style>
 </head>
 <body onload="initApp()">
 
-    <div id="status-msg" class="upload-status">DATEI IMPORTIERT!</div>
+    <div id="status-msg" class="upload-status" style="position: fixed; bottom: 20px; background: var(--neon-green); color: black; padding: 10px 20px; border-radius: 8px; font-weight: bold; z-index: 100; display: none; animation: fadeIn 0.3s ease;">DATEI IMPORTIERT!</div>
 
     <div class="bg-wrapper">
         <div id="bg-image"></div>
@@ -487,14 +462,13 @@
         <button class="kingdom-btn" onclick="showSection('kingdoms')"><span>🏆 CHALLENGES</span></button>
     </div>
 
-    <!-- Kingdom Spin Sektion -->
+    <!-- Sektionen -->
     <div id="kingdom-spin-section" class="hidden animate-in" style="width: 100%; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
             <button class="back-btn" onclick="showSection('menu')"><span>← ZURÜCK</span></button>
             <div class="logo-container"><img src="https://i.imgur.com/v5PPcVA.png" alt="Logo" class="main-logo"></div>
         </div>
         <div class="instruction-box" style="border-color: var(--neon-blue);"><span class="instruction-text">ZUFÄLLIGES KINGDOM</span></div>
-
         <div id="kingdom-layout" class="universal-spin-layout">
             <div class="spin-main-area">
                 <div id="kingdom-slot-container" class="slot-outer-container" onclick="triggerShatter('kingdom')">
@@ -511,7 +485,6 @@
         </div>
     </div>
 
-    <!-- Kingdom Auswahl -->
     <div id="kingdoms-section" class="hidden animate-in" style="width: 100%; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
             <button class="back-btn" onclick="showSection('menu')"><span>← ZURÜCK</span></button>
@@ -521,14 +494,12 @@
         <div class="grid-container" id="kingdom-grid"></div>
     </div>
 
-    <!-- Challenge Spin Sektion -->
     <div id="challenge-spin-section" class="hidden animate-in" style="width: 100%; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
             <button class="back-btn" onclick="showSection('kingdoms')"><span>← ZURÜCK</span></button>
             <div class="logo-container"><img src="https://i.imgur.com/v5PPcVA.png" alt="Logo" class="main-logo"></div>
         </div>
         <div class="instruction-box" style="border-color: var(--neon-green);"><span id="spin-title" class="instruction-text">KINGDOM CHALLENGE</span></div>
-
         <div id="challenge-layout" class="universal-spin-layout">
             <div class="spin-main-area">
                 <div id="challenge-slot-container" class="slot-outer-container" onclick="triggerShatter('challenge')">
@@ -545,14 +516,12 @@
         </div>
     </div>
 
-    <!-- Sucher Sektion -->
     <div id="search-section" class="hidden animate-in" style="width: 100%; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
             <button class="back-btn" onclick="showSection('menu')"><span>← ZURÜCK</span></button>
             <div class="logo-container"><img src="https://i.imgur.com/v5PPcVA.png" alt="Logo" class="main-logo"></div>
         </div>
         <div class="instruction-box" style="border-color: var(--neon-blue);"><span class="instruction-text">SUCHER AUSWAHL</span></div>
-
         <div id="search-layout" class="universal-spin-layout">
             <div class="spin-main-area">
                 <div id="search-slot-container" class="slot-outer-container" onclick="triggerShatter('search')">
@@ -561,7 +530,6 @@
                     </div>
                 </div>
                 <button id="search-spin-btn" class="spin-btn-rounded" onclick="triggerShatter('search')">WER SUCHT?</button>
-                
                 <input type="file" id="file-input" accept="image/*" style="display: none;" multiple onchange="handleFileUpload(event)">
                 <button class="spin-btn-rounded red-variant" onclick="document.getElementById('file-input').click()" style="margin-top: 15px;">SPIELER HINZUFÜGEN</button>
             </div>
@@ -569,7 +537,6 @@
         <div id="avatar-container" class="avatar-list"></div>
     </div>
 
-    <!-- Challenges Verwalten -->
     <div id="manage-section" class="hidden animate-in" style="width: 100%; max-width: 600px; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
             <button class="back-btn" onclick="showSection('kingdoms')"><span>← ZURÜCK</span></button>
@@ -577,7 +544,6 @@
         </div>
         <div class="instruction-box"><span class="instruction-text">CHALLENGE LISTE</span></div>
         <input type="text" id="new-challenge-input" placeholder="💡 Z.B. {WOODED} 🥜 NUSS-VERSTECK...">
-        
         <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 15px;">
             <button class="kingdom-btn green-btn" onclick="addCustomChallenge()" style="margin-bottom: 0;"><span>SPEICHERN</span></button>
             <button class="kingdom-btn" onclick="document.getElementById('txt-input').click()" style="margin-bottom: 0; box-shadow: 6px 6px 0px var(--neon-blue); border-color: var(--neon-blue);"><span>TXT IMPORT</span></button>
@@ -685,20 +651,10 @@
             }
         };
 
-        function playSlotSound() { 
-            slotSound.currentTime = 0; 
-            slotSound.play().catch(() => {}); 
-        }
+        function playSlotSound() { slotSound.currentTime = 0; slotSound.play().catch(() => {}); }
+        function playBreakSound() { breakSound.currentTime = 0; breakSound.play().catch(() => {}); }
 
-        function playBreakSound() { 
-            breakSound.currentTime = 0; 
-            breakSound.play().catch(() => {}); 
-        }
-
-        function initApp() {
-            initKingdoms();
-            renderManageList();
-        }
+        function initApp() { initKingdoms(); renderManageList(); }
 
         function initKingdoms() {
             const grid = document.getElementById('kingdom-grid');
@@ -716,7 +672,6 @@
             allBtn.innerHTML = `<span>ALLE CHALLENGES</span>`;
             allBtn.onclick = () => showSection('manage');
             grid.appendChild(allBtn);
-
             setupShatterHTML('kingdom');
             setupShatterHTML('challenge');
             setupShatterHTML('search');
@@ -741,11 +696,9 @@
                 const el = document.getElementById(id);
                 if (el) { el.classList.add('hidden'); el.style.display = 'none'; }
             });
-
             const targetId = section === 'menu' ? 'main-menu' : section + '-section';
             const target = document.getElementById(targetId);
             if (target) { target.style.display = 'flex'; target.classList.remove('hidden'); }
-            
             if(section === 'manage') renderManageList();
             if(section.includes('spin') || section === 'search') {
                 const type = section.split('-')[0];
@@ -760,7 +713,6 @@
             const layout = document.getElementById(type + '-layout');
             const box = document.getElementById(type + '-box');
             const shatter = document.getElementById(type + '-shatter');
-            
             if (panel) panel.classList.remove('visible');
             if (layout) layout.classList.remove('challenge-shift-active'); 
             if (btn) {
@@ -784,12 +736,9 @@
             const btn = document.getElementById(type + '-spin-btn');
             if(btn && btn.classList.contains('result-state')) { resetUI(type); return; }
             if (type === 'search' && players.length === 0) return;
-
             isSpinning = true;
             pendingSpinType = type; 
-            
             playBreakSound();
-
             const box = document.getElementById(type + '-box');
             const shatter = document.getElementById(type + '-shatter');
             if (box && shatter) {
@@ -818,32 +767,17 @@
             let namePart = text.trim();
             let desc = "Verstecke dich gut!";
             let emoji = "✨";
-            
             const kingdomMatch = namePart.match(/^[\{\[](.*?)[\}\]]\s*(.*)$/);
-            if (kingdomMatch) { 
-                kingdomTag = kingdomMatch[1].trim().toUpperCase(); 
-                namePart = kingdomMatch[2].trim(); 
-            }
-            
+            if (kingdomMatch) { kingdomTag = kingdomMatch[1].trim().toUpperCase(); namePart = kingdomMatch[2].trim(); }
             const descMatch = namePart.match(/^(.*?)\s*\((.*?)\)$/);
-            if (descMatch) { 
-                namePart = descMatch[1].trim(); 
-                desc = descMatch[2].trim(); 
-            }
-            
+            if (descMatch) { namePart = descMatch[1].trim(); desc = descMatch[2].trim(); }
             const keycapMatch = namePart.match(/^([0-9#*]\uFE0F?\u20E3)/);
-            if (keycapMatch) {
-                emoji = keycapMatch[1];
-                namePart = namePart.substring(emoji.length).trim();
-            } else {
+            if (keycapMatch) { emoji = keycapMatch[1]; namePart = namePart.substring(emoji.length).trim(); }
+            else {
                 const emojiRegex = /^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])[\ufe00-\ufe0f\u200d]*/;
                 const emMatch = namePart.match(emojiRegex);
-                if (emMatch) {
-                    emoji = emMatch[0];
-                    namePart = namePart.substring(emoji.length).trim();
-                }
+                if (emMatch) { emoji = emMatch[0]; namePart = namePart.substring(emoji.length).trim(); }
             }
-            
             return { kingdomTag, emoji, name: namePart || "CHALLENGE", desc };
         }
 
@@ -858,11 +792,7 @@
             const winner = kingdoms[Math.floor(Math.random() * kingdoms.length)];
             reelHtml += `<div class="slot-item"><div class="slot-text-only">${winner}</div></div>`;
             reel.innerHTML = reelHtml;
-            setTimeout(() => {
-                reel.style.transition = 'transform 3.5s cubic-bezier(0.1, 0, 0.2, 1)';
-                reel.style.transform = `translateY(-${spinCount * 220}px)`;
-            }, 50);
-
+            setTimeout(() => { reel.style.transition = 'transform 3.5s cubic-bezier(0.1, 0, 0.2, 1)'; reel.style.transform = `translateY(-${spinCount * 220}px)`; }, 50);
             setTimeout(() => {
                 document.getElementById('kingdom-winner-name').innerText = winner;
                 document.getElementById('kingdom-info-panel').classList.add('visible');
@@ -883,7 +813,6 @@
                 return currentKingdom.includes(p.kingdomTag);
             });
             if (pool.length === 0) pool = [{ name: "Keine Challenges", desc: "...", emoji: "⚠️" }];
-
             const spinCount = 25;
             let reelHtml = '';
             for (let i = 0; i < spinCount; i++) {
@@ -893,11 +822,7 @@
             const winner = pool[Math.floor(Math.random() * pool.length)];
             reelHtml += `<div class="slot-item"><span class="slot-emoji-only">${winner.emoji}</span></div>`;
             reel.innerHTML = reelHtml;
-            setTimeout(() => {
-                reel.style.transition = 'transform 3.5s cubic-bezier(0.1, 0, 0.2, 1)';
-                reel.style.transform = `translateY(-${spinCount * 220}px)`;
-            }, 50);
-
+            setTimeout(() => { reel.style.transition = 'transform 3.5s cubic-bezier(0.1, 0, 0.2, 1)'; reel.style.transform = `translateY(-${spinCount * 220}px)`; }, 50);
             setTimeout(() => {
                 document.getElementById('winner-name-text').innerText = winner.name.toUpperCase();
                 document.getElementById('challenge-desc-text').innerText = winner.desc;
@@ -920,10 +845,7 @@
             const winner = players[Math.floor(Math.random() * players.length)];
             reelHtml += `<div class="slot-item"><img src="${winner}" class="slot-image"></div>`;
             reel.innerHTML = reelHtml;
-            setTimeout(() => {
-                reel.style.transition = 'transform 3.5s cubic-bezier(0.1, 0, 0.2, 1)';
-                reel.style.transform = `translateY(-${spinCount * 220}px)`;
-            }, 50);
+            setTimeout(() => { reel.style.transition = 'transform 3.5s cubic-bezier(0.1, 0, 0.2, 1)'; reel.style.transform = `translateY(-${spinCount * 220}px)`; }, 50);
             setTimeout(() => {
                 const btn = document.getElementById('search-spin-btn');
                 btn.innerText = "NOCHMAL?";
@@ -969,7 +891,7 @@
                 div.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid #333; font-size: 0.85rem;";
                 div.innerHTML = `
                     <div style="flex:1">
-                        ${p.emoji} <strong>${p.name.toUpperCase()}</strong> ${p.kingdomTag ? `<span class="type-tag tag-kingdom">${p.kingdomTag}</span>` : `<span class="type-tag tag-global">GLOBAL</span>`}
+                        ${p.emoji} <strong>${p.name.toUpperCase()}</strong> ${p.kingdomTag ? `<span class="type-tag" style="font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:10px; vertical-align:middle; background:var(--neon-blue); color:black;">${p.kingdomTag}</span>` : `<span class="type-tag" style="font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:10px; vertical-align:middle; background:#555;">GLOBAL</span>`}
                         <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">${p.desc}</div>
                     </div>
                     <button style="background:none; border:none; color:var(--neon-red); cursor:pointer; font-weight:bold; padding: 10px;" onclick="customChallenges.splice(${i},1);localStorage.setItem('hns_challenges', JSON.stringify(customChallenges));renderManageList();">DEL</button>
