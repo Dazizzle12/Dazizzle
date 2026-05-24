@@ -110,6 +110,7 @@
         input:checked + .slider { background-color: #fff; }
         input:checked + .slider:before { transform: translateX(16px); background-color: #000; }
 
+        /* Deaktivierter Bereich Style */
         .controls-disabled {
             opacity: 0.3;
             pointer-events: none;
@@ -133,26 +134,31 @@
 
     <div class="animated-bg"></div>
 
-    <header class="max-w-[1600px] w-full mx-auto flex flex-col md:flex-row justify-between items-center mb-6 gap-4 shrink-0">
-        <div>
+    <!-- Header -->
+    <header class="max-w-[1600px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6 items-center shrink-0">
+        <div class="lg:col-span-4">
             <h1 class="text-2xl font-extrabold text-white tracking-tighter flex items-center gap-2">
                 <i data-lucide="shapes" class="w-7 h-7"></i>
                 MASK <span class="font-light opacity-50">STUDIO</span>
             </h1>
         </div>
         
-        <div class="flex gap-1 p-1 bg-zinc-900/50 rounded-full border border-zinc-800">
-            <button id="canvasLandscape" class="flex items-center gap-2 px-6 py-2 text-[10px] font-bold rounded-full transition-all">
-                <i data-lucide="monitor" class="w-3 h-3"></i> LANDSCAPE
-            </button>
-            <button id="canvasPortrait" class="flex items-center gap-2 px-6 py-2 text-[10px] font-bold rounded-full transition-all">
-                <i data-lucide="smartphone" class="w-3 h-3"></i> PORTRAIT
-            </button>
+        <div class="lg:col-span-8 flex">
+            <div class="flex gap-1 p-1 bg-zinc-900/50 rounded-full border border-zinc-800 w-fit">
+                <button id="canvasLandscape" class="flex items-center gap-2 px-6 py-2 text-[10px] font-bold rounded-full transition-all">
+                    <i data-lucide="monitor" class="w-3 h-3"></i> LANDSCAPE
+                </button>
+                <button id="canvasPortrait" class="flex items-center gap-2 px-6 py-2 text-[10px] font-bold rounded-full transition-all">
+                    <i data-lucide="smartphone" class="w-3 h-3"></i> PORTRAIT
+                </button>
+            </div>
         </div>
     </header>
 
+    <!-- Main Grid -->
     <main class="max-w-[1600px] w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow overflow-hidden">
         
+        <!-- Sidebar -->
         <aside class="lg:col-span-4 flex flex-col gap-6 overflow-y-auto custom-scrollbar pr-1">
             
             <div class="glass-panel p-5">
@@ -167,6 +173,7 @@
                         </button>
                     </div>
                 </div>
+                
                 <div id="layerList" class="space-y-2 max-h-[140px] overflow-y-auto custom-scrollbar"></div>
             </div>
 
@@ -196,15 +203,6 @@
                             <option value="21-9">Ultrawide (21:9)</option>
                         </select>
                     </div>
-                </div>
-
-                <!-- Neuer Skalierungs-Regler -->
-                <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800/50">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[10px] text-zinc-400 font-black uppercase">Master Skalierung (Zoom)</span>
-                        <span id="valScale" class="text-xs font-mono text-white">100%</span>
-                    </div>
-                    <input type="range" id="inputScale" min="10" max="250" value="100" class="w-full">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -255,6 +253,7 @@
             </div>
         </aside>
 
+        <!-- Viewport -->
         <section class="lg:col-span-8 flex flex-col min-h-0">
             <div id="viewport" class="canvas-container shadow-2xl">
                 <canvas id="maskCanvas"></canvas>
@@ -283,7 +282,6 @@
               presetSelect = document.getElementById('presetSelect'),
               inputWidth = document.getElementById('inputWidth'),
               inputHeight = document.getElementById('inputHeight'),
-              inputScale = document.getElementById('inputScale'),
               inputRotation = document.getElementById('inputRotation'),
               inputRadius = document.getElementById('inputRadius'),
               shadowToggle = document.getElementById('shadowToggle'),
@@ -328,9 +326,8 @@
             const spikes = 5;
             const outerRadW = w / 2;
             const outerRadH = h / 2;
-            // Verhältnis angepasst für einen weniger spitzen Stern (0.5 statt 0.4)
-            const innerRadW = outerRadW * 0.52; 
-            const innerRadH = outerRadH * 0.52;
+            const innerRadW = outerRadW * 0.4;
+            const innerRadH = outerRadH * 0.4;
             const step = Math.PI / spikes;
             const pts = [];
 
@@ -399,7 +396,7 @@
             const id = Date.now();
             layers.push({
                 id, type, x: workspaceW/2, y: workspaceH/2,
-                w: 800, h: 800, rot: 0, radius: 40, scale: 100,
+                w: 800, h: 800, rot: 0, radius: 40,
                 shadowEnabled: false, shadowColor: '#ffffff', shadowBlur: 40
             });
             selectedLayerId = id;
@@ -422,21 +419,20 @@
             const l = layers.find(li => li.id === selectedLayerId);
             if (!l) return;
             shapeSelect.value = l.type;
-            inputWidth.value = l.w; 
-            inputHeight.value = l.h;
-            inputScale.value = l.scale || 100;
-            inputRotation.value = l.rot; 
-            inputRadius.value = l.radius;
+            inputWidth.value = l.w; inputHeight.value = l.h;
+            inputRotation.value = l.rot; inputRadius.value = l.radius;
             shadowToggle.checked = l.shadowEnabled;
-            inputShadowColor.value = l.shadowColor; 
-            inputShadowBlur.value = l.shadowBlur;
+            inputShadowColor.value = l.shadowColor; inputShadowBlur.value = l.shadowBlur;
 
-            if (!l.shadowEnabled) shadowControls.classList.add('controls-disabled');
-            else shadowControls.classList.remove('controls-disabled');
+            // Glow-Status Visualisierung
+            if (!l.shadowEnabled) {
+                shadowControls.classList.add('controls-disabled');
+            } else {
+                shadowControls.classList.remove('controls-disabled');
+            }
 
             document.getElementById('valWidth').textContent = Math.round(l.w);
             document.getElementById('valHeight').textContent = Math.round(l.h);
-            document.getElementById('valScale').textContent = (l.scale || 100) + "%";
             document.getElementById('valRotation').textContent = l.rot + "°";
             document.getElementById('valRadius').textContent = l.radius;
             document.getElementById('valBlur').textContent = l.shadowBlur;
@@ -460,13 +456,14 @@
         presetSelect.onchange = () => {
             const l = layers.find(li => li.id === selectedLayerId);
             if (!l) return;
+            
             const val = presetSelect.value;
             if (val === '16-9') { l.w = 1200; l.h = 675; }
             else if (val === '9-16') { l.w = 675; l.h = 1200; }
             else if (val === '1-1') { l.w = 800; l.h = 800; }
             else if (val === '4-3') { l.w = 1000; l.h = 750; }
             else if (val === '21-9') { l.w = 1400; l.h = 600; }
-            l.scale = 100; // Reset Scale on preset change
+            
             syncControls(); render();
         }
 
@@ -487,37 +484,27 @@
             if (l) {
                 if (e && e.target === shapeSelect) {
                     l.type = shapeSelect.value;
-                    l.w = 800; l.h = 800; l.scale = 100;
+                    l.w = 800; l.h = 800;
                     l.rot = 0; l.radius = 40;
                     l.shadowEnabled = false;
                     l.shadowBlur = 0;
                     presetSelect.value = 'custom';
-                } else if (e && e.target === inputScale) {
-                    const newScale = +inputScale.value;
-                    const factor = newScale / (l.scale || 100);
-                    l.w *= factor;
-                    l.h *= factor;
-                    l.scale = newScale;
                 } else {
                     l.type = shapeSelect.value;
-                    l.w = +inputWidth.value; 
-                    l.h = +inputHeight.value;
-                    l.rot = +inputRotation.value; 
-                    l.radius = +inputRadius.value;
+                    l.w = +inputWidth.value; l.h = +inputHeight.value;
+                    l.rot = +inputRotation.value; l.radius = +inputRadius.value;
                     l.shadowEnabled = shadowToggle.checked;
-                    l.shadowColor = inputShadowColor.value; 
-                    l.shadowBlur = +inputShadowBlur.value;
+                    l.shadowColor = inputShadowColor.value; l.shadowBlur = +inputShadowBlur.value;
                     
                     if (e && (e.target === inputWidth || e.target === inputHeight)) {
                         presetSelect.value = 'custom';
-                        l.scale = 100; // Reset scale text if manually adjusted
                     }
                 }
                 syncControls(); render();
             }
         };
 
-        [shapeSelect, inputWidth, inputHeight, inputScale, inputRotation, inputRadius, shadowToggle, inputShadowColor, inputShadowBlur].forEach(el => el.oninput = updateData);
+        [shapeSelect, inputWidth, inputHeight, inputRotation, inputRadius, shadowToggle, inputShadowColor, inputShadowBlur].forEach(el => el.oninput = updateData);
 
         addLayerBtn.onclick = () => addLayer();
         deleteLayerBtn.onclick = () => {
