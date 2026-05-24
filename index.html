@@ -50,7 +50,7 @@
             transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .app-card:hover {
+        .app-card:hover, .model-card:hover {
             background: rgba(255, 255, 255, 0.07);
             border-color: var(--secondary);
             transform: translateY(-12px) scale(1.02);
@@ -124,6 +124,11 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -133,6 +138,7 @@
     </div>
 
     <main id="main-content" class="max-w-7xl mx-auto px-6 pt-32">
+        
         <div class="text-center mb-24">
             <span class="text-purple-500 font-black uppercase tracking-[0.4em] text-sm mb-4 block">Software Suite v2.0</span>
             <h2 class="text-6xl md:text-8xl font-black mb-8 gradient-text tracking-tighter uppercase">Dazizzle Tools</h2>
@@ -143,31 +149,46 @@
 
         <div id="apps-grid" class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-32"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
-            <a href="https://www.youtube.com/channel/UCcy8hIpOAjc6oaKS1sc9EvA" target="_blank" class="glass-card p-8 rounded-3xl group block">
-                <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center mb-6 border border-red-600/20 group-hover:scale-110 transition-transform">
-                    <i class="fab fa-youtube text-red-600 text-xl"></i>
-                </div>
-                <h4 class="text-xl font-bold mb-2 text-white">YouTube</h4>
-                <p class="text-gray-500 text-sm mb-6">High Quality gaming content zu Mario, Zelda & weiteres.</p>
-                <span class="text-xs font-black uppercase tracking-widest text-red-500 group-hover:text-white transition-colors">Abonnieren →</span>
-            </a>
-            <a href="https://www.twitch.tv/dazizzle" target="_blank" class="glass-card p-8 rounded-3xl group block">
-                <div class="w-12 h-12 bg-purple-600/10 rounded-2xl flex items-center justify-center mb-6 border border-purple-600/20 group-hover:scale-110 transition-transform">
-                    <i class="fab fa-twitch text-purple-600 text-xl"></i>
-                </div>
-                <h4 class="text-xl font-bold mb-2 text-white">Twitch</h4>
-                <p class="text-gray-500 text-sm mb-6">Live Sessions & Community Gaming mit der Crew.</p>
-                <span class="text-xs font-black uppercase tracking-widest text-purple-500 group-hover:text-white transition-colors">Folgen →</span>
-            </a>
-            <a href="https://discord.gg/2SSAyDUWYt" target="_blank" class="glass-card p-8 rounded-3xl group block">
-                <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center mb-6 border border-blue-600/20 group-hover:scale-110 transition-transform">
-                    <i class="fab fa-discord text-blue-500 text-xl"></i>
-                </div>
-                <h4 class="text-xl font-bold mb-2 text-white">Discord</h4>
-                <p class="text-gray-500 text-sm mb-6">Direkter support & Austausch in der Community.</p>
-                <span class="text-xs font-black uppercase tracking-widest text-blue-500 group-hover:text-white transition-colors">Beitreten →</span>
-            </a>
+        <div class="mb-32">
+            <div class="text-center mb-16">
+                <span class="text-blue-500 font-black uppercase tracking-[0.4em] text-sm mb-4 block">Friends & Creator</span>
+                <h2 class="text-4xl md:text-5xl font-black gradient-text tracking-tighter uppercase">Meine Kollegen</h2>
+            </div>
+            <!-- Grid angepasst: lg:grid-cols-3 sorgt für 3 pro Reihe -->
+            <div id="models-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+
+        <div class="mb-32">
+            <div class="text-center mb-16">
+                <span class="text-green-500 font-black uppercase tracking-[0.4em] text-sm mb-4 block">Meine Plattformen</span>
+                <h2 class="text-4xl md:text-5xl font-black gradient-text tracking-tighter uppercase">Dazizzle Links</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <a href="https://www.youtube.com/channel/UCcy8hIpOAjc6oaKS1sc9EvA" target="_blank" class="glass-card p-8 rounded-3xl group block">
+                    <div class="w-12 h-12 bg-red-600/10 rounded-2xl flex items-center justify-center mb-6 border border-red-600/20 group-hover:scale-110 transition-transform">
+                        <i class="fab fa-youtube text-red-600 text-xl"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 text-white">YouTube</h4>
+                    <p class="text-gray-500 text-sm mb-6">High Quality gaming content zu Mario, Zelda & weiteres.</p>
+                    <span class="text-xs font-black uppercase tracking-widest text-red-500 group-hover:text-white transition-colors">Abonnieren →</span>
+                </a>
+                <a href="https://www.twitch.tv/dazizzle" target="_blank" class="glass-card p-8 rounded-3xl group block">
+                    <div class="w-12 h-12 bg-purple-600/10 rounded-2xl flex items-center justify-center mb-6 border border-purple-600/20 group-hover:scale-110 transition-transform">
+                        <i class="fab fa-twitch text-purple-600 text-xl"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 text-white">Twitch</h4>
+                    <p class="text-gray-500 text-sm mb-6">Live Sessions & Community Gaming mit der Crew.</p>
+                    <span class="text-xs font-black uppercase tracking-widest text-purple-500 group-hover:text-white transition-colors">Folgen →</span>
+                </a>
+                <a href="https://discord.gg/2SSAyDUWYt" target="_blank" class="glass-card p-8 rounded-3xl group block">
+                    <div class="w-12 h-12 bg-blue-600/10 rounded-2xl flex items-center justify-center mb-6 border border-blue-600/20 group-hover:scale-110 transition-transform">
+                        <i class="fab fa-discord text-blue-500 text-xl"></i>
+                    </div>
+                    <h4 class="text-xl font-bold mb-2 text-white">Discord</h4>
+                    <p class="text-gray-500 text-sm mb-6">Direkter support & Austausch in der Community.</p>
+                    <span class="text-xs font-black uppercase tracking-widest text-blue-500 group-hover:text-white transition-colors">Beitreten →</span>
+                </a>
+            </div>
         </div>
     </main>
 
@@ -186,17 +207,64 @@
                 title: "Mask Studio",
                 desc: "Ein Maskeneditor für OBS. Erstelle professionelle Masken in Sekunden mit Echtzeit-Vorschau.",
                 image: "https://i.imgur.com/nQAH2Je.png",
-                file: "Mask Studio.html"
+                file: "Mask Studio.html",
+                devs: "Dazizzle & Leonardo"
             },
             {
                 title: "Hide and Seek App",
                 desc: "Die Ultimative Begleit-App für Super Mario Odyssey Hide and Seek mit Challenges und Glücksrad.",
                 image: "https://i.imgur.com/v5PPcVA.png",
-                file: "HIde and Sekk apppü.html"
+                file: "HIde and Sekk apppü.html",
+                devs: "Dazizzle & LeYoshi"
             }
         ];
 
-        function render() {
+        const models = [
+            {
+                name: "LeYoshi",
+                desc: "Content Creator und großartiger Kollege. Schau dir unbedingt seine Streams und Videos an!",
+                image: "https://i.imgur.com/IamEuSY.jpeg", 
+                twitch: "https://www.twitch.tv/leyoshi_",
+                youtube: "https://www.youtube.com/@leyoshiyt",
+                discord: "https://discord.gg/BxZd7zapWy" 
+            },
+            {
+                name: "Leonardo",
+                desc: "Content Creator und toller Kollege. Bekannt als NudelmitWurst für witzigen Gaming-Content!",
+                image: "https://i.imgur.com/88nWJ1J.jpeg", 
+                twitch: "https://www.twitch.tv/nudelmitwurst",
+                youtube: "https://www.youtube.com/@NudelmitWurst"
+            },
+            {
+                name: "GratonNHN",
+                desc: "Content Creator und engagierter Kollege. Erfahrener Gaming-Content, den man gesehen haben muss!",
+                image: "https://i.imgur.com/fs15on1.png",
+                twitch: "https://www.twitch.tv/gratonnhn",
+                youtube: "https://www.youtube.com/@gratonnhn_64"
+            },
+            {
+                name: "Letsmili",
+                desc: "Content Creator und geschätzter Kollege. Entdecke seinen einzigartigen Gaming-Content auf Twitch und YouTube!",
+                image: "https://i.imgur.com/t0AZQbk.png",
+                twitch: "https://www.twitch.tv/letsmili",
+                youtube: "https://www.youtube.com/@letsplaymili"
+            },
+            {
+                name: "King der Maxi",
+                desc: "Content Creator und Teil der Crew. Hol dir top Gaming-Unterhaltung auf seinen Kanälen!",
+                image: "https://i.imgur.com/NFZ0cyH.jpeg",
+                twitch: "https://www.twitch.tv/kingdermaxi",
+                youtube: "https://www.youtube.com/@KingDerMaxi"
+            },
+            {
+                name: "LAUCHIAN09",
+                desc: "Content Creator und geschätzter Kollege. Schau bei seinem nächsten Livestream vorbei!",
+                image: "https://i.imgur.com/x7pJ5nk.jpeg",
+                twitch: "https://www.twitch.tv/lauchian09"
+            }
+        ];
+
+        function renderApps() {
             const grid = document.getElementById('apps-grid');
             grid.innerHTML = apps.map((app, i) => `
                 <div onclick="launchApp(${i})" class="app-card glass-card p-10 rounded-[2.5rem] cursor-pointer group relative overflow-hidden">
@@ -207,12 +275,30 @@
                         ${app.title}
                         <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                     </h3>
-                    <p class="text-gray-400 text-sm mb-10 h-12 overflow-hidden line-clamp-2">${app.desc}</p>
+                    <p class="text-gray-400 text-sm mb-10 h-auto overflow-visible">${app.desc}</p>
                     <div class="flex items-center justify-between">
-                        <span class="px-5 py-2 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-300 border border-white/5">Dazizzle Suite</span>
+                        <span class="px-5 py-2 bg-white/5 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-300 border border-white/5">${app.devs}</span>
                         <div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center transition-transform group-hover:rotate-[-45deg] group-hover:bg-purple-500 group-hover:text-white">
                             <i class="fas fa-arrow-right"></i>
                         </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderModels() {
+            const grid = document.getElementById('models-grid');
+            grid.innerHTML = models.map((model) => `
+                <div class="model-card glass-card p-8 rounded-[2.5rem] group relative overflow-hidden flex flex-col items-center text-center h-full">
+                    <div class="w-32 h-32 rounded-full overflow-hidden mb-6 border-4 border-white/10 group-hover:border-blue-500 transition-colors shadow-2xl relative">
+                        <img src="${model.image}" alt="${model.name}" class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-2xl font-black mb-3">${model.name}</h3>
+                    <p class="text-gray-400 text-sm mb-8 flex-grow">${model.desc}</p>
+                    <div class="flex gap-4 justify-center w-full mt-auto">
+                        ${model.youtube ? `<a href="${model.youtube}" target="_blank" class="w-12 h-12 rounded-full bg-red-600/10 border border-red-600/20 flex items-center justify-center text-red-500 hover:bg-red-600 hover:text-white hover:scale-110 transition-all shadow-lg"><i class="fab fa-youtube text-lg"></i></a>` : ''}
+                        ${model.twitch ? `<a href="${model.twitch}" target="_blank" class="w-12 h-12 rounded-full bg-purple-600/10 border border-purple-600/20 flex items-center justify-center text-purple-500 hover:bg-purple-600 hover:text-white hover:scale-110 transition-all shadow-lg"><i class="fab fa-twitch text-lg"></i></a>` : ''}
+                        ${model.discord ? `<a href="${model.discord}" target="_blank" class="w-12 h-12 rounded-full bg-blue-600/10 border border-blue-600/20 flex items-center justify-center text-blue-400 hover:bg-blue-600 hover:text-white hover:scale-110 transition-all shadow-lg"><i class="fab fa-discord text-lg"></i></a>` : ''}
                     </div>
                 </div>
             `).join('');
@@ -225,6 +311,7 @@
             frame.src = app.file;
             viewer.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            history.pushState({appOpen: true}, "App");
         }
 
         function closeApp() {
@@ -232,9 +319,19 @@
             viewer.style.display = 'none';
             document.getElementById('app-frame').src = "about:blank";
             document.body.style.overflow = 'auto';
+            if (history.state && history.state.appOpen) {
+                history.back();
+            }
         }
 
-        render();
+        window.onpopstate = function(event) {
+            if (document.getElementById('app-viewer').style.display === 'flex') {
+                closeApp();
+            }
+        };
+
+        renderApps();
+        renderModels();
     </script>
 </body>
 </html>
