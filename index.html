@@ -50,7 +50,7 @@
             transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .app-card:hover, .model-card:hover {
+        .app-card:hover, .model-card:hover, .video-card:hover {
             background: rgba(255, 255, 255, 0.07);
             border-color: var(--secondary);
             transform: translateY(-12px) scale(1.02);
@@ -149,12 +149,20 @@
 
         <div id="apps-grid" class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-32"></div>
 
+        <!-- Neue Kategorie: Aktuelle Videos -->
+        <div class="mb-32">
+            <div class="text-center mb-16">
+                <span class="text-red-500 font-black uppercase tracking-[0.4em] text-sm mb-4 block">YouTube Feed</span>
+                <h2 class="text-4xl md:text-5xl font-black gradient-text tracking-tighter uppercase">Aktuelle Videos</h2>
+            </div>
+            <div id="videos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+
         <div class="mb-32">
             <div class="text-center mb-16">
                 <span class="text-blue-500 font-black uppercase tracking-[0.4em] text-sm mb-4 block">Friends & Creator</span>
                 <h2 class="text-4xl md:text-5xl font-black gradient-text tracking-tighter uppercase">Meine Kollegen</h2>
             </div>
-            <!-- Grid angepasst: lg:grid-cols-3 sorgt für 3 pro Reihe -->
             <div id="models-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
         </div>
 
@@ -203,65 +211,23 @@
 
     <script>
         const apps = [
-            {
-                title: "Mask Studio",
-                desc: "Ein Maskeneditor für OBS. Erstelle professionelle Masken in Sekunden mit Echtzeit-Vorschau.",
-                image: "https://i.imgur.com/nQAH2Je.png",
-                file: "Mask Studio.html",
-                devs: "Dazizzle & Leonardo"
-            },
-            {
-                title: "Hide and Seek App",
-                desc: "Die Ultimative Begleit-App für Super Mario Odyssey Hide and Seek mit Challenges und Glücksrad.",
-                image: "https://i.imgur.com/v5PPcVA.png",
-                file: "HIde and Sekk apppü.html",
-                devs: "Dazizzle & LeYoshi"
-            }
+            { title: "Mask Studio", desc: "Ein Maskeneditor für OBS. Erstelle professionelle Masken in Sekunden mit Echtzeit-Vorschau.", image: "https://i.imgur.com/nQAH2Je.png", file: "Mask Studio.html", devs: "Dazizzle & Leonardo" },
+            { title: "Hide and Seek App", desc: "Die Ultimative Begleit-App für Super Mario Odyssey Hide and Seek mit Challenges und Glücksrad.", image: "https://i.imgur.com/v5PPcVA.png", file: "HIde and Sekk apppü.html", devs: "Dazizzle & LeYoshi" }
         ];
 
         const models = [
-            {
-                name: "LeYoshi",
-                desc: "Content Creator und großartiger Kollege. Schau dir unbedingt seine Streams und Videos an!",
-                image: "https://i.imgur.com/IamEuSY.jpeg", 
-                twitch: "https://www.twitch.tv/leyoshi_",
-                youtube: "https://www.youtube.com/@leyoshiyt",
-                discord: "https://discord.gg/BxZd7zapWy" 
-            },
-            {
-                name: "Leonardo",
-                desc: "Content Creator und toller Kollege. Bekannt als NudelmitWurst für witzigen Gaming-Content!",
-                image: "https://i.imgur.com/88nWJ1J.jpeg", 
-                twitch: "https://www.twitch.tv/nudelmitwurst",
-                youtube: "https://www.youtube.com/@NudelmitWurst"
-            },
-            {
-                name: "GratonNHN",
-                desc: "Content Creator und engagierter Kollege. Erfahrener Gaming-Content, den man gesehen haben muss!",
-                image: "https://i.imgur.com/fs15on1.png",
-                twitch: "https://www.twitch.tv/gratonnhn",
-                youtube: "https://www.youtube.com/@gratonnhn_64"
-            },
-            {
-                name: "Letsmili",
-                desc: "Content Creator und geschätzter Kollege. Entdecke seinen einzigartigen Gaming-Content auf Twitch und YouTube!",
-                image: "https://i.imgur.com/t0AZQbk.png",
-                twitch: "https://www.twitch.tv/letsmili",
-                youtube: "https://www.youtube.com/@letsplaymili"
-            },
-            {
-                name: "King der Maxi",
-                desc: "Content Creator und Teil der Crew. Hol dir top Gaming-Unterhaltung auf seinen Kanälen!",
-                image: "https://i.imgur.com/NFZ0cyH.jpeg",
-                twitch: "https://www.twitch.tv/kingdermaxi",
-                youtube: "https://www.youtube.com/@KingDerMaxi"
-            },
-            {
-                name: "LAUCHIAN09",
-                desc: "Content Creator und geschätzter Kollege. Schau bei seinem nächsten Livestream vorbei!",
-                image: "https://i.imgur.com/x7pJ5nk.jpeg",
-                twitch: "https://www.twitch.tv/lauchian09"
-            }
+            { name: "LeYoshi", desc: "Content Creator und großartiger Kollege. Schau dir unbedingt seine Streams und Videos an!", image: "https://i.imgur.com/IamEuSY.jpeg", twitch: "https://www.twitch.tv/leyoshi_", youtube: "https://www.youtube.com/@leyoshiyt", discord: "https://discord.gg/BxZd7zapWy" },
+            { name: "Leonardo", desc: "Content Creator und toller Kollege. Bekannt als NudelmitWurst für witzigen Gaming-Content!", image: "https://i.imgur.com/88nWJ1J.jpeg", twitch: "https://www.twitch.tv/nudelmitwurst", youtube: "https://www.youtube.com/@NudelmitWurst" },
+            { name: "GratonNHN", desc: "Content Creator und engagierter Kollege. Erfahrener Gaming-Content, den man gesehen haben muss!", image: "https://i.imgur.com/fs15on1.png", twitch: "https://www.twitch.tv/gratonnhn", youtube: "https://www.youtube.com/@gratonnhn_64" },
+            { name: "Letsmili", desc: "Content Creator und geschätzter Kollege. Entdecke seinen einzigartigen Gaming-Content auf Twitch und YouTube!", image: "https://i.imgur.com/t0AZQbk.png", twitch: "https://www.twitch.tv/letsmili", youtube: "https://www.youtube.com/@letsplaymili" },
+            { name: "King der Maxi", desc: "Content Creator und Teil der Crew. Hol dir top Gaming-Unterhaltung auf seinen Kanälen!", image: "https://i.imgur.com/NFZ0cyH.jpeg", twitch: "https://www.twitch.tv/kingdermaxi", youtube: "https://www.youtube.com/@KingDerMaxi" },
+            { name: "LAUCHIAN09", desc: "Content Creator und geschätzter Kollege. Schau bei seinem nächsten Livestream vorbei!", image: "https://i.imgur.com/x7pJ5nk.jpeg", twitch: "https://www.twitch.tv/lauchian09" }
+        ];
+
+        const videos = [
+            { title: "Diese MARIO ODYSSEY Hide and Seek Runden waren anders RILD", desc: "Super Mario Odyssey Hide and Seek mit LeYoshi, King der Maxi und Hinovator!", thumb: "https://img.youtube.com/vi/43jQiqggiFI/maxresdefault.jpg", link: "https://www.youtube.com/watch?v=43jQiqggiFI" },
+            { title: "GLÜCKSRAD entscheidet, WO wir uns VERSTECKEN in Odyssey Hide & Seek?!", desc: "Super Mario Odyssey Hide and Seek mit LeYoshi, King der Maxi und Hinovator!", thumb: "https://img.youtube.com/vi/V49239KfiRE/maxresdefault.jpg", link: "https://www.youtube.com/watch?v=V49239KfiRE" },
+            { title: "NIEMAND hat ihn hier GEFUNDEN in MARIO ODYSSEY HIDE & SEEK", desc: "Super Mario Odyssey Hide and Seek mit LeYoshi, King der Maxi und Hinovator!", thumb: "https://img.youtube.com/vi/M5FSNdg66cg/maxresdefault.jpg", link: "https://www.youtube.com/watch?v=M5FSNdg66cg" }
         ];
 
         function renderApps() {
@@ -283,6 +249,17 @@
                         </div>
                     </div>
                 </div>
+            `).join('');
+        }
+
+        function renderVideos() {
+            const grid = document.getElementById('videos-grid');
+            grid.innerHTML = videos.map(v => `
+                <a href="${v.link}" target="_blank" class="video-card glass-card p-6 rounded-[2.5rem] block h-full">
+                    <img src="${v.thumb}" class="w-full aspect-video object-contain bg-black/20 rounded-2xl mb-6 shadow-inner">
+                    <h3 class="text-xl font-black mb-2">${v.title}</h3>
+                    <p class="text-gray-400 text-sm">${v.desc}</p>
+                </a>
             `).join('');
         }
 
@@ -331,6 +308,7 @@
         };
 
         renderApps();
+        renderVideos();
         renderModels();
     </script>
 </body>
