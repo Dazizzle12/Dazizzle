@@ -14,9 +14,9 @@
             --panel-bg: rgba(21, 21, 21, 0.9);
             --glass-bg: rgba(255, 255, 255, 0.12);
             --glass-border: rgba(255, 255, 255, 0.25);
+            --emoji-red: #dd2e44; /* Original Emoji Rot */
         }
 
-        /* HINTERGRUND SETUP */
         .bg-wrapper {
             position: fixed;
             top: 0;
@@ -30,24 +30,24 @@
 
         #bg-image {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%; 
-            height: 100%;
+            top: -5%;
+            left: -5%;
+            width: 110%; 
+            height: 110%;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            animation: smoothZoom 40s linear infinite alternate;
+            animation: kenBurns 20s ease-in-out infinite alternate;
             will-change: transform;
             transition: background-image 0.8s ease-in-out;
-            background-color: #050505;
-            /* ABDUNKLUNG: Auf 0.85 erhöht für einen noch stärkeren Fokus auf den Vordergrund */
-            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url("https://i.imgur.com/ypKK0F8.png");
+            background-color: #111;
+            /* Hintergrundbild weiter abgedunkelt (von 0.5 auf 0.75) */
+            background-image: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url("https://i.imgur.com/nK2IDCe.jpeg");
         }
 
-        @keyframes smoothZoom {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.12); }
+        @keyframes kenBurns {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(-2%, -2%); }
         }
 
         body {
@@ -66,7 +66,29 @@
             position: relative;
         }
 
-        /* HEADER & NAVIGATION */
+        /* Scan-Lines Overlay entfernt */
+
+        /* CUSTOM EMOJI STYLING FÜR A, C, D, E */
+        .custom-block-emoji {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--emoji-red);
+            color: white;
+            border-radius: 20%;
+            width: 1.1em;
+            height: 1.1em;
+            font-family: 'Arial Black', sans-serif;
+            font-weight: 900;
+            font-style: normal;
+            font-size: 0.85em;
+            vertical-align: middle;
+            line-height: 1;
+            box-shadow: inset 0 -2px 0px rgba(0,0,0,0.15);
+            text-transform: uppercase;
+            margin-right: 4px;
+        }
+
         .section-header {
             width: 100%;
             display: flex;
@@ -104,7 +126,7 @@
             filter: drop-shadow(0 0 10px rgba(0, 204, 255, 0.5));
         }
 
-        /* BOX-ANIMATIONEN */
+        /* Item Box & Shatter Styles */
         .item-box-placeholder {
             width: 140px;
             height: 140px;
@@ -127,7 +149,6 @@
             100% { filter: drop-shadow(0 0 15px var(--mario-yellow)) hue-rotate(360deg); }
         }
 
-        /* SHATTER EFFEKT */
         .shatter-container {
             position: absolute;
             width: 140px;
@@ -156,7 +177,7 @@
             100% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)) scale(0); opacity: 0; }
         }
 
-        /* BUTTONS */
+        /* Buttons & UI Elements */
         .kingdom-btn {
             background-color: rgba(0, 0, 0, 0.85);
             font-weight: 700;
@@ -230,7 +251,6 @@
             pointer-events: none;
         }
 
-        /* LAYOUTS */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -318,7 +338,7 @@
         }
 
         .slot-text-only {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 900;
             color: white;
             text-shadow: 0 0 10px var(--neon-blue);
@@ -393,7 +413,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
 
-        /* AVATARE & LISTEN */
         .avatar-list {
             display: flex;
             flex-wrap: wrap;
@@ -438,11 +457,72 @@
             max-height: 400px;
             overflow-y: auto;
         }
+        
+        .type-tag {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        .tag-global { background: #555; }
+        .tag-kingdom { background: var(--neon-blue); color: black; }
+
+        .upload-status {
+            position: fixed;
+            bottom: 20px;
+            background: var(--neon-green);
+            color: black;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 100;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Toggle Slider Styles */
+        .switch-container input:checked + .slider {
+            background-color: var(--neon-green);
+            border-color: var(--neon-green);
+            box-shadow: 0 0 12px var(--neon-green);
+        }
+        .switch-container .slider::before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+        }
+        .switch-container input:checked + .slider::before {
+            transform: translateX(26px);
+            background-color: black;
+        }
+
+        /* Scoreboard Buttons in Settings */
+        .score-adjust-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            color: white;
+            font-family: inherit;
+            padding: 5px 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            transform: skewX(-12deg);
+        }
+        .score-adjust-btn:active {
+            background: var(--neon-blue);
+            color: black;
+        }
     </style>
 </head>
 <body onload="initApp()">
 
-    <div id="status-msg" class="upload-status" style="position: fixed; bottom: 20px; background: var(--neon-green); color: black; padding: 10px 20px; border-radius: 8px; font-weight: bold; z-index: 100; display: none; animation: fadeIn 0.3s ease;">DATEI IMPORTIERT!</div>
+    <div id="status-msg" class="upload-status">DATEI IMPORTIERT!</div>
 
     <div class="bg-wrapper">
         <div id="bg-image"></div>
@@ -459,22 +539,24 @@
         </div>
         <button class="kingdom-btn blue-btn" onclick="showSection('kingdom-spin')"><span>🎡 KINGDOM RAD</span></button>
         <button class="kingdom-btn green-btn" onclick="showSection('search')"><span>🔍 SUCHER RAD</span></button>
-        <button class="kingdom-btn" onclick="showSection('kingdoms')"><span>🏆 CHALLENGES</span></button>
+        <!-- Umgeleiteter Button für flexiblen Flow -->
+        <button class="kingdom-btn" onclick="startChallengesFlow()"><span>🏆 CHALLENGES</span></button>
+        <!-- Einstellungsbutton mit grauer Umrandung anstelle von blau -->
+        <button class="kingdom-btn" onclick="showSection('settings')" style="box-shadow: 6px 6px 0px #a3a3a3; border-color: rgba(163, 163, 163, 0.4);"><span>⚙️ EINSTELLUNGEN</span></button>
     </div>
 
-    <!-- Sektionen -->
+    <!-- Kingdom Spin Sektion -->
     <div id="kingdom-spin-section" class="hidden animate-in" style="width: 100%; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
             <button class="back-btn" onclick="showSection('menu')"><span>← ZURÜCK</span></button>
             <div class="logo-container"><img src="https://i.imgur.com/v5PPcVA.png" alt="Logo" class="main-logo"></div>
         </div>
         <div class="instruction-box" style="border-color: var(--neon-blue);"><span class="instruction-text">ZUFÄLLIGES KINGDOM</span></div>
+
         <div id="kingdom-layout" class="universal-spin-layout">
             <div class="spin-main-area">
                 <div id="kingdom-slot-container" class="slot-outer-container" onclick="triggerShatter('kingdom')">
-                    <div id="kingdom-reel" class="slot-reel">
-                        <div class="slot-item" id="kingdom-initial-slot"></div>
-                    </div>
+                    <div id="kingdom-reel" class="slot-reel"></div>
                 </div>
                 <button id="kingdom-spin-btn" class="spin-btn-rounded" onclick="triggerShatter('kingdom')">KINGDOM WÄHLEN</button>
             </div>
@@ -485,6 +567,7 @@
         </div>
     </div>
 
+    <!-- Kingdom Auswahl -->
     <div id="kingdoms-section" class="hidden animate-in" style="width: 100%; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
             <button class="back-btn" onclick="showSection('menu')"><span>← ZURÜCK</span></button>
@@ -494,18 +577,19 @@
         <div class="grid-container" id="kingdom-grid"></div>
     </div>
 
+    <!-- Challenge Spin Sektion -->
     <div id="challenge-spin-section" class="hidden animate-in" style="width: 100%; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
-            <button class="back-btn" onclick="showSection('kingdoms')"><span>← ZURÜCK</span></button>
+            <!-- Dynamischer Zurück-Button -->
+            <button class="back-btn" onclick="goBackFromChallengeSpin()"><span>← ZURÜCK</span></button>
             <div class="logo-container"><img src="https://i.imgur.com/v5PPcVA.png" alt="Logo" class="main-logo"></div>
         </div>
         <div class="instruction-box" style="border-color: var(--neon-green);"><span id="spin-title" class="instruction-text">KINGDOM CHALLENGE</span></div>
+
         <div id="challenge-layout" class="universal-spin-layout">
             <div class="spin-main-area">
                 <div id="challenge-slot-container" class="slot-outer-container" onclick="triggerShatter('challenge')">
-                    <div id="challenge-reel" class="slot-reel">
-                        <div class="slot-item" id="challenge-initial-slot"></div>
-                    </div>
+                    <div id="challenge-reel" class="slot-reel"></div>
                 </div>
                 <button id="challenge-spin-btn" class="spin-btn-rounded" onclick="triggerShatter('challenge')">SPIN STARTEN</button>
             </div>
@@ -516,34 +600,42 @@
         </div>
     </div>
 
+    <!-- Sucher Sektion -->
     <div id="search-section" class="hidden animate-in" style="width: 100%; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
             <button class="back-btn" onclick="showSection('menu')"><span>← ZURÜCK</span></button>
             <div class="logo-container"><img src="https://i.imgur.com/v5PPcVA.png" alt="Logo" class="main-logo"></div>
         </div>
         <div class="instruction-box" style="border-color: var(--neon-blue);"><span class="instruction-text">SUCHER AUSWAHL</span></div>
+
         <div id="search-layout" class="universal-spin-layout">
             <div class="spin-main-area">
                 <div id="search-slot-container" class="slot-outer-container" onclick="triggerShatter('search')">
-                    <div id="search-reel" class="slot-reel">
-                        <div class="slot-item" id="search-initial-slot"></div>
-                    </div>
+                    <div id="search-reel" class="slot-reel"></div>
                 </div>
                 <button id="search-spin-btn" class="spin-btn-rounded" onclick="triggerShatter('search')">WER SUCHT?</button>
+                
                 <input type="file" id="file-input" accept="image/*" style="display: none;" multiple onchange="handleFileUpload(event)">
                 <button class="spin-btn-rounded red-variant" onclick="document.getElementById('file-input').click()" style="margin-top: 15px;">SPIELER HINZUFÜGEN</button>
+            </div>
+            <!-- Sucher Info Reveal Area für Sucher Nachteil / Handicap -->
+            <div id="search-info-panel" class="info-reveal-area">
+                <h2 id="search-winner-text" style="color: var(--neon-green);">SUCHER GEWÄHLT!</h2>
+                <p id="search-handicap-text" style="color: #ff3333; font-weight: 900;"></p>
             </div>
         </div>
         <div id="avatar-container" class="avatar-list"></div>
     </div>
 
+    <!-- Challenge Liste -->
     <div id="manage-section" class="hidden animate-in" style="width: 100%; max-width: 600px; flex-direction: column; align-items: center; z-index: 25;">
         <div class="section-header">
             <button class="back-btn" onclick="showSection('kingdoms')"><span>← ZURÜCK</span></button>
-            <div class="logo-container"><img src="https://i.imgur.com/v5PPcVA.png" alt="Logo" class="main-logo"></div>
+            <div class="logo-container"><img src="https://i.imgur.com/v5PPcVA.png" class="main-logo"></div>
         </div>
         <div class="instruction-box"><span class="instruction-text">CHALLENGE LISTE</span></div>
         <input type="text" id="new-challenge-input" placeholder="💡 Z.B. {WOODED} 🥜 NUSS-VERSTECK...">
+        
         <div style="display: flex; gap: 10px; width: 100%; margin-bottom: 15px;">
             <button class="kingdom-btn green-btn" onclick="addCustomChallenge()" style="margin-bottom: 0;"><span>SPEICHERN</span></button>
             <button class="kingdom-btn" onclick="document.getElementById('txt-input').click()" style="margin-bottom: 0; box-shadow: 6px 6px 0px var(--neon-blue); border-color: var(--neon-blue);"><span>TXT IMPORT</span></button>
@@ -552,11 +644,133 @@
         <div class="custom-challenge-list" id="manage-list"></div>
     </div>
 
+    <!-- Einstellungen Sektion -->
+    <div id="settings-section" class="hidden animate-in" style="width: 100%; max-width: 650px; flex-direction: column; align-items: center; z-index: 25;">
+        <div class="section-header">
+            <button class="back-btn" onclick="showSection('menu')"><span>← ZURÜCK</span></button>
+            <div class="logo-container"><img src="https://i.imgur.com/v5PPcVA.png" class="main-logo"></div>
+        </div>
+        <div class="instruction-box" style="border-color: #a3a3a3;"><span class="instruction-text">EINSTELLUNGEN</span></div>
+        
+        <!-- Scoreboard Panel -->
+        <div class="custom-challenge-list" style="padding: 20px; width: 100%; box-sizing: border-box; text-align: center; margin-bottom: 20px; border: 1px solid var(--neon-blue);">
+            <span style="font-size: 1.1rem; display: block; margin-bottom: 15px; font-style: italic; color: var(--neon-blue);">🏆 SPIELSTAND (SCOREBOARD)</span>
+            <div style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px;">
+                <div>
+                    <span style="color: var(--neon-red); font-size: 0.85rem; display: block; letter-spacing: 1px;">SUCHER</span>
+                    <span id="seeker-score-val" style="font-size: 2.5rem; font-weight: 900; display: block; margin: 5px 0;">0</span>
+                    <div style="display: flex; gap: 8px; justify-content: center;">
+                        <button class="score-adjust-btn" onclick="adjustScore('seeker', -1)"><span>-</span></button>
+                        <button class="score-adjust-btn" onclick="adjustScore('seeker', 1)"><span>+</span></button>
+                    </div>
+                </div>
+                <div style="font-size: 1.5rem; color: #444;">VS</div>
+                <div>
+                    <span style="color: var(--neon-green); font-size: 0.85rem; display: block; letter-spacing: 1px;">VERSTECKER</span>
+                    <span id="hider-score-val" style="font-size: 2.5rem; font-weight: 900; display: block; margin: 5px 0;">0</span>
+                    <div style="display: flex; gap: 8px; justify-content: center;">
+                        <button class="score-adjust-btn" onclick="adjustScore('hider', -1)"><span>-</span></button>
+                        <button class="score-adjust-btn" onclick="adjustScore('hider', 1)"><span>+</span></button>
+                    </div>
+                </div>
+            </div>
+            <button onclick="resetScoreboard()" style="background: none; border: none; color: #777; font-size: 0.75rem; cursor: pointer; text-decoration: underline; text-transform: uppercase;">Spielstand zurücksetzen</button>
+        </div>
+
+        <!-- Einstellungs-Optionen Container -->
+        <div class="custom-challenge-list" style="padding: 20px; width: 100%; box-sizing: border-box; margin-bottom: 20px;">
+            
+            <span style="font-size: 1.1rem; display: block; margin-bottom: 15px; font-style: italic; color: var(--neon-blue);">🎮 GAMEPLAY-MODIFIKATOREN & FILTER</span>
+
+            <!-- Option: Nur Allgemeine Challenges -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 15px;">
+                <div style="padding-right: 15px;">
+                    <span style="font-size: 1rem; color: #ffffff; display: block; font-style: italic;">NUR ALLGEMEINE CHALLENGES</span>
+                    <span style="font-size: 0.75rem; color: #888; text-transform: none; font-style: normal; margin-top: 5px; display: block; line-height: 1.4;">
+                        Überspringt die Königreich-Auswahl im Hauptmenü. Ideal für Custom Maps! Es werden nur noch allgemeine Challenges gedreht.
+                    </span>
+                </div>
+                <label class="switch-container" style="position: relative; display: inline-block; width: 60px; height: 32px; flex-shrink: 0;">
+                    <input type="checkbox" id="only-general-toggle" onchange="toggleOnlyGeneral(this.checked)" style="opacity: 0; width: 0; height: 0;">
+                    <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #222; transition: .3s; border: 1px solid #a3a3a3; transform: skewX(-12deg);"></span>
+                </label>
+            </div>
+
+            <!-- Option: Hardcore-Modus -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 15px;">
+                <div style="padding-right: 15px;">
+                    <span style="font-size: 1rem; color: #ffffff; display: block; font-style: italic;">HARDCORE-MODUS</span>
+                    <span style="font-size: 0.75rem; color: #888; text-transform: none; font-style: normal; margin-top: 5px; display: block; line-height: 1.4;">
+                        Kombiniert die gezogene Challenge automatisch mit einer zusätzlichen, zufälligen allgemeinen Challenge für doppeltes Chaos!
+                    </span>
+                </div>
+                <label class="switch-container" style="position: relative; display: inline-block; width: 60px; height: 32px; flex-shrink: 0;">
+                    <input type="checkbox" id="hardcore-toggle" onchange="toggleHardcore(this.checked)" style="opacity: 0; width: 0; height: 0;">
+                    <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #222; transition: .3s; border: 1px solid #a3a3a3; transform: skewX(-12deg);"></span>
+                </label>
+            </div>
+
+            <!-- Option: Sucher-Nachteil -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 15px;">
+                <div style="padding-right: 15px;">
+                    <span style="font-size: 1rem; color: #ffffff; display: block; font-style: italic;">SUCHER-NACHTEIL (HANDICAP)</span>
+                    <span style="font-size: 0.75rem; color: #888; text-transform: none; font-style: normal; margin-top: 5px; display: block; line-height: 1.4;">
+                        Verpasst dem gezogenen Sucher eine zufällige, erschwerende Einschränkung (z. B. Bewegungslimit, Sichtlimit, Controller auf dem Kopf etc.).
+                    </span>
+                </div>
+                <label class="switch-container" style="position: relative; display: inline-block; width: 60px; height: 32px; flex-shrink: 0;">
+                    <input type="checkbox" id="handicap-toggle" onchange="toggleHandicap(this.checked)" style="opacity: 0; width: 0; height: 0;">
+                    <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #222; transition: .3s; border: 1px solid #a3a3a3; transform: skewX(-12deg);"></span>
+                </label>
+            </div>
+
+            <!-- Option: Keine Subareas -->
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 5px;">
+                <div style="padding-right: 15px;">
+                    <span style="font-size: 1rem; color: #ffffff; display: block; font-style: italic;">KEINE SUBAREAS ERLAUBEN</span>
+                    <span style="font-size: 0.75rem; color: #888; text-transform: none; font-style: normal; margin-top: 5px; display: block; line-height: 1.4;">
+                        Filtert alle Aufgaben aus der Drehung heraus, bei denen man sich in einer Subarea (Unterwelt/Röhre/etc.) verstecken muss.
+                    </span>
+                </div>
+                <label class="switch-container" style="position: relative; display: inline-block; width: 60px; height: 32px; flex-shrink: 0;">
+                    <input type="checkbox" id="no-subareas-toggle" onchange="toggleNoSubareas(this.checked)" style="opacity: 0; width: 0; height: 0;">
+                    <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #222; transition: .3s; border: 1px solid #a3a3a3; transform: skewX(-12deg);"></span>
+                </label>
+            </div>
+            
+        </div>
+
+        <!-- Challenge Bannliste Panel -->
+        <div class="custom-challenge-list" style="padding: 20px; width: 100%; box-sizing: border-box;">
+            <span style="font-size: 1.1rem; display: block; margin-bottom: 5px; font-style: italic; color: var(--neon-red);">🚫 CHALLENGE-BANNLISTE</span>
+            <span style="font-size: 0.75rem; color: #888; text-transform: none; font-style: normal; margin-bottom: 15px; display: block; line-height: 1.4;">
+                Wähle die Challenges aus, auf die ihr heute keine Lust habt. Gebannte Challenges werden beim Drehen ignoriert.
+            </span>
+            <div id="banned-challenges-container" style="max-height: 300px; overflow-y: auto; background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 10px; border-radius: 8px;">
+                <!-- Dynamisch generierte Bann-Einträge -->
+            </div>
+        </div>
+    </div>
+
     <script>
         let players = [];
         let currentKingdom = "";
         let isSpinning = false;
         let pendingSpinType = null;
+        let audioTimeout = null;
+
+        // Modus & Modifikatoren aus LocalStorage auslesen (Zustandserhaltung)
+        let onlyGeneralChallenges = JSON.parse(localStorage.getItem('hns_only_general')) || false;
+        let hardcoreModeActive = JSON.parse(localStorage.getItem('hns_hardcore_mode')) || false;
+        let seekerHandicapActive = JSON.parse(localStorage.getItem('hns_seeker_handicap')) || false;
+        let noSubareasAllowed = JSON.parse(localStorage.getItem('hns_no_subareas')) || false;
+        
+        // Punktestand-Daten
+        let seekerScore = JSON.parse(localStorage.getItem('hns_score_seeker')) || 0;
+        let hiderScore = JSON.parse(localStorage.getItem('hns_score_hider')) || 0;
+
+        // Challenge Blacklist (banned challenges by text)
+        let bannedChallengeTexts = JSON.parse(localStorage.getItem('hns_banned_texts')) || [];
         
         const kingdoms = [
             "MUSHROOM KINGDOM", "CAP KINGDOM", "CASCADE KINGDOM", "SAND KINGDOM",
@@ -565,20 +779,33 @@
             "RUINED KINGDOM", "BOWSER'S KINGDOM", "MOON KINGDOM", "DARK SIDE"
         ];
 
+        const HANDICAPS = [
+            "KEINE ROLL-MOVES / LONGJUMPS ERLAUBT!",
+            "DU MUSST IM FIRST-PERSON-MODUS (KAMERA GANZ NAH) SUCHEN!",
+            "BEWEGE DICH NUR GEDUCKT FORT!",
+            "DU DARFST DAS GAMEPLAY-FENSTER NUR ZUR HÄLFTE SEHEN (WENN MÖGLICH)!",
+            "VERWENDE DEN CONTROLLER IM HANDS-DOWN / VERKEHRTHERUM GRIFF!",
+            "KEINE CAPPY-JUMPS ERLAUBT (NUR NORMALE SPRÜNGE)!",
+            "LAUFE JEDEM MITSTREITER, DEN DU SIEHST, ERST 3 SEKUNDEN NUR HINTERHER!",
+            "DU DARFST NUR AUF DEM RADAR ODER DER MINIMAP SCHAUEN!"
+        ];
+
         const INITIAL_CHALLENGES = [
             "{ALLGEMEIN} 🎩SHOM (Verstecke dich bei der Odyssey)",
             "{ALLGEMEIN} 🤣SHOM 2 (Verstecke dich auf der Odyssey)",
-            "{ALLGEMEIN} 🧢CAPTURE (Verstecke dich in einer Kaperung)",
+            "{ALLGEMEIN} 😹SHOM 3 (Verstecke dich IN der Odyssey)",
+            "{ALLGEMEIN} ✨DÄVID (Glitch dich in die Odyssey)",
+            "{ALLGEMEIN} 🧢FORMENWANDLER (Verstecke dich in einer Kaperung)",
             "{ALLGEMEIN} 🤚EINHÄNDIGER BOSS (Spiele für 2 Minuten einhändig)",
             "{ALLGEMEIN} 🦶FUßFETISCHIST (Spiele für 2 Minuten mit deinen Füßen)",
-            "{ALLGEMEIN} 🛸SUBAREA (Verstecke dich in einer Subarea)",
+            "{ALLGEMEIN} 🛸SUBAREA (Verstecke dich in einer Subarea, du darfst diese NIE verlassen [gilt nur für Kingdoms, wo Subareas erlaubt sind])",
             "{ALLGEMEIN} 🚶WANDERER (Durchquere das komplette Kingdom einmal)",
             "{ALLGEMEIN} 🗣DICHTER (Jeder Satz, den du sagst, muss sich reimen)",
             "{ALLGEMEIN} 🎮CONTROLLER (Spiele mit umgedrehtem Controller)",
             "{ALLGEMEIN} 📸BRUNO DER KAMERAMANN (Verstecke dich im Fotomodus)",
             "{ALLGEMEIN} 🐦PHOENIX (Verstecke dich ein zweites Mal)",
-            "{ALLGEMEIN} 🕊TAUBE (Laufe dem Sucher für eine Minute hinterher)",
-            "{ALLGEMEIN} 🔧KLEMPTNER (Inspiziere eine Röhre für 2 Minuten)",
+            "{ALLGEMEIN} 🕊TAUBE (Laufe dem Sucher für 2 Minutn hinterher)",
+            "{ALLGEMEIN} 🔧KLEMPNER (Inspiziere eine Röhre für 2 Minuten)",
             "{ALLGEMEIN} 💵VERKÄUFER (Verstecke dich im Shop)",
             "{ALLGEMEIN} 😠RAGEBAITER (Kommentiere alles was du siehst)",
             "{ALLGEMEIN} 👑ADLIGER (Rede in gehobener Sprache)",
@@ -586,10 +813,27 @@
             "{ALLGEMEIN} 🚩FAHNENTRÄGER (Verstecke dich in der Nähe einer Checkpoint Flagpole)",
             "{ALLGEMEIN} 💑ROMANTIKER (Besuche Peach und gib ihr einen Kuss)",
             "{ALLGEMEIN} 🐤ORNITHOLOGE (Rede mit Talkatoo)",
-            "{ALLGEMEIN} 🐮EINSAMER (Verstecke dich bei einem freundlichen NPC)",
-            "{ALLGEMEIN} 🅱REIHE B (Verstecke dich in Reihe B)",
-            "{ALLGEMEIN} 🅰REIHE A (Verstecke dich in Reihe A)",
-            "{ALLGEMEIN} 🇨REIHE C (Verstecke dich in Reihe C)",
+            "{ALLGEMEIN} 😭EINSAMER (Verstecke dich bei einem freundlichen NPC)",
+            "{ALLGEMEIN} 🦇BATMAN (Verstecke dich im Schatten)",
+            "{ALLGEMEIN} 🎥2D (Du darfst die Kamera nicht mehr drehen)",
+            "{ALLGEMEIN} 🧂SALTY (Rege dich über alles auf)",
+            "{ALLGEMEIN} 👴OPATALKS (Gehe deinen Mitspielern auf den Sack)",
+            "{ALLGEMEIN} 🧑‍💻CHEATER (Verstecke dich in einem anderen Kingdom, aber mache immer super auffällige Aussagen über das Kingdom)",
+            "{ALLGEMEIN} 🪝ABHÄNGEN (Lass dich irgendwo runterhängen)",
+            "{ALLGEMEIN} 🧝ZWERG (Mach dein Odyssey Fenster so klein wie möglich)",
+            "{ALLGEMEIN} 🫅HINOVATOR (Spiele mit schlechtem Movement, also keine krassen Jumps, usw...)",
+            "{ALLGEMEIN} 🧑‍🤝‍🧑BESUCH (Verstecke dich bei einem Mitspieler)",
+            "{ALLGEMEIN} ❤️ROT (Verstecke dich bei etwas Rotem)",
+            "{ALLGEMEIN} 💁‍♂️SEPHIRON (Gib schlechte/verwirrende Tipps)",
+            "{ALLGEMEIN} 😆MOBBINGOPFER (Deine Mitspieler dürfen dir \"Wenn ich du wäre...\" Aufgaben stellen)",
+            "{ALLGEMEIN} 📹FOTOGRAF (Fotografiere jedes Mal den Sucher, sobald du ihn siehst und schick es ihm)",
+            "{ALLGEMEIN} 🌍GEOGUESSER (Schick dem Sucher Geogeusser Tipps)",
+            "{ALLGEMEIN} 🪞GESPIEGELT (Spiegel dein Odyssey Gameplay in OBS)",
+            "{ALLGEMEIN} 📺BLACKSCREEN (Minimier dein Odyssey Fenster für 1 1/2 Minuten)",
+            "{ALLGEMEIN} 🥨BAYERN DES SAMMA MIA (Sprich bayrisch)",
+            "{ALLGEMEIN} 🅰️REIHE A (Verstecke dich in Reihe A)",
+            "{ALLGEMEIN} 🅱️REIHE B (Verstecke dich in Reihe B)",
+            "{ALLGEMEIN} ©️REIHE C (Verstecke dich in Reihe C)",
             "{ALLGEMEIN} 🇩REIHE D (Verstecke dich in Reihe D)",
             "{ALLGEMEIN} 🇪REIHE E (Verstecke dich in Reihe E)",
             "{ALLGEMEIN} 1️⃣SPALTE 1 (Verstecke dich in Spalte 1)",
@@ -605,36 +849,45 @@
             "{WOODED} 🧅ZWIEBEL ENJOYER (Verstecke dich als Uproot)",
             "{WOODED} 🌲BAUM LOVER (Kuschel mit einem Baum für 2 Minuten)",
             "{WOODED} 🐑BAUER (Gehe in die Schaf Subarea)",
-            "{CASCADE} 🐱‍🐉PALÄONTOLOGE (Verstecke dich in der DinoSUBarea)",
+            "{CASCADE} 🦕PALÄONTOLOGE (Verstecke dich in der DinoSUBarea)",
             "{CASCADE} 🏴‍☠️SCHATZSUCHER (Verstecke dich in der Schatztruhe)",
-            "{CAP} 🤬KOMMT DA RUNTER IHR BASTARDE (Hinterseite des Hutturms)",
+            "{CASCADE} Rex (Kaper den T-Rex für eine Minute)",
+            "{CASCADE} 🌿RUNTER VON MEINEM RASEN! (Verstecke dich NICHT auf Gras, du darfst es zum Flüchtenn aber berühren)",
+            "{CAP} 🤬KOMMT DA RUNTER IHR BASTARDE (Verstecke dich in der Subarea an der Rückseite des Hutturms)",
             "{CAP} 💦RUTSCHEN ENJOYER (Rutsche 3 mal die Rutsche herunter)",
+            "{CAP} 🌫️ALLES IST IN DICHTEN NEBEL GEHÜLLT (Verstecke dich als Paragumba im Nebel)",
             "{SAND} 🦁JAXI (Düs mit Jaxi durch die Wüste)",
-            "{SAND} 🚪GEHEIMES KÄMMERCHEN (Kammer unter dem Treibsand)",
+            "{SAND} 🚪GEHEIMES KÄMMERCHEN (Gehe in die Kammer unter dem Treibsand)",
             "{SAND} 🗿MOE-EYE (Verstecke dich als Moe-Eye)",
-            "{METRO} 🛵ROLLSTUHLFAHRER (Bewege dich mit dem Roller fort)",
+            "{SAND} ⬆️GAMERS DON'T LOOK UP (Verstecke dich auf der Pyramide)",
+            "{METRO} 🛵ROLLSTUHLFAHRER (Deine Beine sind gebrochen, bewege dich mit dem Roller fort)",
             "{METRO} 🧹MÜLLABFUHR (Verstecke dich in der Mülltonne)",
             "{METRO} 🕺TÄNZER (Tanze für 2 Minuten im Rathaus)",
-            "{METRO} 🔤ANAL-PHABET (Kaper Buchstaben und schreibe 'Mario' falsch)",
-            "{BOWSER} 🐢DAZIZZLE (Laterne beim Bowser Kopf)",
+            "{METRO} 🔤ANAL-PHABET (Kaper die Buchstaben und schreibe \"Mario\" falsch)",
+            "{BOWSER} 🐢DAZIZZLE (Gehe auf die Laterne beim Bowser Kopf)",
             "{BOWSER} 🎣ANGLER (Kaper Lakitu und angel 2 Fische)",
             "{BOWSER} 🌾GÄRTNER (Planze die Nut ein)",
             "{BOWSER} 🔝GABELSTAPLER (Stapel 8 Gumbas)",
             "{MOON} 👰BRAUT (Verstecke dich in der Kirche)",
+            "{MOON} 🐜SMALLANT (Gehe in die bermt berüchtigte 2D Subarea)",
             "{LOST} 🌲HUEBI (Hänge dich in einen Baum)",
-            "{LOST} 🧐SAUSIA (Chill mit Glydon)",
-            "{LAKE} 🍄TOADS BESTER FREUND (Hinter Captain Toads Zelt)",
+            "{LOST} 🧐SAUSIA (Chill für 1 Minute and 38 Sekunden mit Glydon)",
+            "{LOST} 🍄TOADS BESTER FREUND (Verstecke dich hinter Captain Toad's Zelt)",
+            "{LAKE} 🍄TOADS BESTER FREUND (Verstecke dich hinter Captain Toad's Zelt)",
             "{LAKE} 🐢LETSMILI (Verstecke dich in Lakitu)",
-            "{LUNCHEON} 👨‍🍳CHEFKOCH (Wirf 3 Rüben in den Topf)",
+            "{LAKE} 🐟FISCH (Verstecke unterwasser)",
+            "{LAKE} 🤫GEHEIMES KÄMMERCHEN (Verstecke dich im geheimen Kämmerchen)",
+            "{LUNCHEON} 👨‍🍳CHEFKOCH (Wirf die 3 Rüben neben dem Topf in den Kochtopf)",
             "{LUNCHEON} 🧀TANZ DEN KÄSE (Verstecke dich im Käse)",
             "{LUNCHEON} 🍴FETTSACK (Rede die ganze Zeit über Essen)",
-            "{LUNCHEON} 🍴POKEMON ESSER (Iss so viel du kannst)",
-            "{SNOW} ❄SCHNEEENGEL (Tiefschnee Subarea)",
+            "{SNOW} ❄SCHNEEENGEL (Gehe in die Tiefschnee Subarea)",
             "{SNOW} 🌬BLASI BLASI (Verstecke dich als Wolke)",
-            "{MUSHROOM} 🚪HANDWERKER (Auf der Tür verstecken)",
-            "{MUSHROOM} 🗼DACHDECKER (Verstecke dich auf einem Turm)",
-            "{CLOUD} 🕹NOSTALGIKER (2D Subarea)",
-            "{RUINED} 🐉DRACHENLORD (Verstecke dich auf dem Drachen)"
+            "{MUSHROOM} 🚪HANDWERKER (Repariere die Tür, auf der Tür verstecken)",
+            "{MUSHROOM}  Tower (Verstecke dich auf einem Turm)",
+            "{CLOUD} 🕹NOSTALGIKER (Verstecke dich in der 2D Subarea)",
+            "{CLOUD} 🧩MA- MA- MACHT TOTAL SPAß... SaaS (Vertsecke dich in der Gesichter Puzzle Subarea)",
+            "{RUINED} 🐉DRACHENLORD (Verstecke dich auf dem Drachen)",
+            "{RUINED} 🍝NUDELMITWURST (Verstecke dich hinter dem Zaun bei der Odyssey)"
         ];
 
         let customChallenges = JSON.parse(localStorage.getItem('hns_challenges')) || INITIAL_CHALLENGES;
@@ -654,7 +907,134 @@
         function playSlotSound() { slotSound.currentTime = 0; slotSound.play().catch(() => {}); }
         function playBreakSound() { breakSound.currentTime = 0; breakSound.play().catch(() => {}); }
 
-        function initApp() { initKingdoms(); renderManageList(); }
+        function initApp() {
+            // Spieler-Profile aus LocalStorage laden
+            players = JSON.parse(localStorage.getItem('hns_players')) || [];
+            renderAvatars();
+
+            initKingdoms();
+            renderManageList();
+            
+            // UI-Schalter-Zustände beim Starten setzen
+            document.getElementById('only-general-toggle').checked = onlyGeneralChallenges;
+            document.getElementById('hardcore-toggle').checked = hardcoreModeActive;
+            document.getElementById('handicap-toggle').checked = seekerHandicapActive;
+            document.getElementById('no-subareas-toggle').checked = noSubareasAllowed;
+
+            // Scoreboard initialisieren
+            updateScoreboardUI();
+
+            // Challenge-Bannliste initialisieren
+            renderBannlist();
+        }
+
+        /* --- SCOREBOARD LOGIC --- */
+        function adjustScore(type, amount) {
+            if (type === 'seeker') {
+                seekerScore = Math.max(0, seekerScore + amount);
+                localStorage.setItem('hns_score_seeker', JSON.stringify(seekerScore));
+            } else if (type === 'hider') {
+                hiderScore = Math.max(0, hiderScore + amount);
+                localStorage.setItem('hns_score_hider', JSON.stringify(hiderScore));
+            }
+            updateScoreboardUI();
+        }
+
+        function resetScoreboard() {
+            seekerScore = 0;
+            hiderScore = 0;
+            localStorage.setItem('hns_score_seeker', JSON.stringify(0));
+            localStorage.setItem('hns_score_hider', JSON.stringify(0));
+            updateScoreboardUI();
+        }
+
+        function updateScoreboardUI() {
+            document.getElementById('seeker-score-val').innerText = seekerScore;
+            document.getElementById('hider-score-val').innerText = hiderScore;
+        }
+
+        /* --- SETTINGS TOGGLES --- */
+        function toggleOnlyGeneral(checked) {
+            onlyGeneralChallenges = checked;
+            localStorage.setItem('hns_only_general', JSON.stringify(onlyGeneralChallenges));
+        }
+
+        function toggleHardcore(checked) {
+            hardcoreModeActive = checked;
+            localStorage.setItem('hns_hardcore_mode', JSON.stringify(hardcoreModeActive));
+        }
+
+        function toggleHandicap(checked) {
+            seekerHandicapActive = checked;
+            localStorage.setItem('hns_seeker_handicap', JSON.stringify(seekerHandicapActive));
+        }
+
+        function toggleNoSubareas(checked) {
+            noSubareasAllowed = checked;
+            localStorage.setItem('hns_no_subareas', JSON.stringify(noSubareasAllowed));
+            renderBannlist(); // Aktualisiert auch Bannliste
+        }
+
+        /* --- CHALLENGE BLACKLIST (BANNLIST) --- */
+        function renderBannlist() {
+            const container = document.getElementById('banned-challenges-container');
+            if(!container) return;
+            container.innerHTML = '';
+
+            customChallenges.forEach((ch, idx) => {
+                const parsed = parseChallenge(ch);
+                const isBanned = bannedChallengeTexts.includes(ch);
+                
+                // Schauen, ob sie durch Subarea-Toggle ausgefiltert wird
+                const isSubarea = ch.toLowerCase().includes('subarea');
+                const disabledStyle = (noSubareasAllowed && isSubarea) ? 'opacity: 0.4; pointer-events: none;' : '';
+
+                const row = document.createElement('label');
+                row.style = `display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #222; cursor: pointer; text-transform: none; font-style: normal; font-size: 0.8rem; ${disabledStyle}`;
+                row.innerHTML = `
+                    <div style="flex: 1; text-align: left; padding-right: 10px;">
+                        <span style="font-size: 1rem; margin-right: 5px;">${parsed.emoji}</span>
+                        <strong style="color: #fff;">${parsed.name.toUpperCase()}</strong> 
+                        ${parsed.kingdomTag ? `<span class="type-tag tag-kingdom">${parsed.kingdomTag}</span>` : `<span class="type-tag tag-global">GLOBAL</span>`}
+                        <div style="color: #888; font-size: 0.75rem; margin-top: 2px;">${parsed.desc}</div>
+                    </div>
+                    <input type="checkbox" onchange="toggleBann('${ch.replace(/'/g, "\\'")}', this.checked)" ${isBanned ? 'checked' : ''} style="transform: scale(1.2); cursor: pointer;">
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function toggleBann(challengeText, checked) {
+            if (checked) {
+                if (!bannedChallengeTexts.includes(challengeText)) {
+                    bannedChallengeTexts.push(challengeText);
+                }
+            } else {
+                bannedChallengeTexts = bannedChallengeTexts.filter(t => t !== challengeText);
+            }
+            localStorage.setItem('hns_banned_texts', JSON.stringify(bannedChallengeTexts));
+        }
+
+        /* --- FLOW LOGIC --- */
+        // Entscheidet, ob man direkt zum Rad kommt oder zur Kingdom Auswahl
+        function startChallengesFlow() {
+            if (onlyGeneralChallenges) {
+                currentKingdom = "ALLGEMEIN";
+                document.getElementById('spin-title').innerText = "ALLGEMEINE CHALLENGE";
+                showSection('challenge-spin');
+            } else {
+                showSection('kingdoms');
+            }
+        }
+
+        // Bringt dich beim Verlassen des Rades an die richtige Stelle zurück
+        function goBackFromChallengeSpin() {
+            if (onlyGeneralChallenges) {
+                showSection('menu');
+            } else {
+                showSection('kingdoms');
+            }
+        }
 
         function initKingdoms() {
             const grid = document.getElementById('kingdom-grid');
@@ -672,37 +1052,45 @@
             allBtn.innerHTML = `<span>ALLE CHALLENGES</span>`;
             allBtn.onclick = () => showSection('manage');
             grid.appendChild(allBtn);
-            setupShatterHTML('kingdom');
-            setupShatterHTML('challenge');
-            setupShatterHTML('search');
         }
 
         function setupShatterHTML(type) {
-            const container = document.getElementById(type + '-initial-slot');
-            if(!container) return;
-            let shatterHTML = `<div class="item-box-placeholder" id="${type}-box"></div><div class="shatter-container" id="${type}-shatter">`;
+            const reel = document.getElementById(type + '-reel');
+            if(!reel) return;
+            
+            reel.innerHTML = `<div class="slot-item" id="${type}-initial-slot">
+                <div class="item-box-placeholder" id="${type}-box"></div>
+                <div class="shatter-container" id="${type}-shatter"></div>
+            </div>`;
+
+            const shatterContainer = document.getElementById(type + '-shatter');
+            let piecesHTML = '';
             for(let r=0; r<4; r++) {
                 for(let c=0; c<4; c++) {
                     const bx = c * 35; const by = r * 35;
-                    shatterHTML += `<div class="shatter-piece" style="left:${bx}px; top:${by}px; background-position:-${bx}px -${by}px;"></div>`;
+                    piecesHTML += `<div class="shatter-piece" style="left:${bx}px; top:${by}px; background-position:-${bx}px -${by}px;"></div>`;
                 }
             }
-            shatterHTML += `</div>`;
-            container.innerHTML = shatterHTML;
+            shatterContainer.innerHTML = piecesHTML;
         }
 
         function showSection(section) {
-            ['main-menu', 'kingdoms-section', 'search-section', 'manage-section', 'challenge-spin-section', 'kingdom-spin-section'].forEach(id => {
+            ['main-menu', 'kingdoms-section', 'search-section', 'manage-section', 'challenge-spin-section', 'kingdom-spin-section', 'settings-section'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) { el.classList.add('hidden'); el.style.display = 'none'; }
             });
+
             const targetId = section === 'menu' ? 'main-menu' : section + '-section';
             const target = document.getElementById(targetId);
             if (target) { target.style.display = 'flex'; target.classList.remove('hidden'); }
+            
             if(section === 'manage') renderManageList();
-            if(section.includes('spin') || section === 'search') {
+            if(section === 'settings') renderBannlist();
+            
+            if((section.includes('spin') || section === 'search') && section !== 'kingdoms') {
                 const type = section.split('-')[0];
                 resetUI(type);
+                setupShatterHTML(type);
             }
         }
 
@@ -711,8 +1099,7 @@
             const btn = document.getElementById(type + '-spin-btn');
             const reel = document.getElementById(type + '-reel');
             const layout = document.getElementById(type + '-layout');
-            const box = document.getElementById(type + '-box');
-            const shatter = document.getElementById(type + '-shatter');
+            
             if (panel) panel.classList.remove('visible');
             if (layout) layout.classList.remove('challenge-shift-active'); 
             if (btn) {
@@ -720,38 +1107,54 @@
                 btn.classList.remove('result-state');
                 btn.innerText = type === 'search' ? 'WER SUCHT?' : (type === 'kingdom' ? 'KINGDOM WÄHLEN' : 'SPIN STARTEN');
             }
-            if (box) box.style.opacity = '1';
-            if (shatter) { shatter.style.display = 'none'; shatter.classList.remove('shatter-active'); }
             if (reel) {
-                reel.innerHTML = `<div class="slot-item" id="${type}-initial-slot"></div>`;
-                setupShatterHTML(type);
                 reel.style.transform = 'translateY(0)';
                 reel.style.transition = 'none';
             }
+            if (audioTimeout) {
+                clearTimeout(audioTimeout);
+                audioTimeout = null;
+            }
+            slotSound.onended = null;
             pendingSpinType = null;
+            isSpinning = false;
         }
 
         function triggerShatter(type) {
             if (isSpinning) return;
             const btn = document.getElementById(type + '-spin-btn');
-            if(btn && btn.classList.contains('result-state')) { resetUI(type); return; }
+            
+            if(btn && btn.classList.contains('result-state')) { 
+                resetUI(type); 
+                setupShatterHTML(type);
+                return; 
+            }
+            
             if (type === 'search' && players.length === 0) return;
+
             isSpinning = true;
             pendingSpinType = type; 
+            
+            if(type === 'kingdom') prepareKingdomSlots();
+            else if(type === 'challenge') prepareChallengeSlots();
+            else if(type === 'search') prepareSearchSlots();
+
             playBreakSound();
+
             const box = document.getElementById(type + '-box');
             const shatter = document.getElementById(type + '-shatter');
             if (box && shatter) {
                 const pieces = shatter.querySelectorAll('.shatter-piece');
                 pieces.forEach(p => {
-                    p.style.setProperty('--tx', `${(Math.random() - 0.5) * 400}px`);
-                    p.style.setProperty('--ty', `${(Math.random() - 0.5) * 400}px`);
-                    p.style.setProperty('--tr', `${(Math.random() - 0.5) * 1080}deg`);
+                    p.style.setProperty('--tx', `${(Math.random() - 0.5) * 450}px`);
+                    p.style.setProperty('--ty', `${(Math.random() - 0.5) * 450}px`);
+                    p.style.setProperty('--tr', `${(Math.random() - 0.5) * 1200}deg`);
                 });
                 box.style.opacity = '0';
                 shatter.style.display = 'block';
                 shatter.classList.add('shatter-active');
             }
+            
             const spinBtn = document.getElementById(type + '-spin-btn');
             if(spinBtn) spinBtn.classList.add('spin-btn-hidden');
         }
@@ -767,110 +1170,280 @@
             let namePart = text.trim();
             let desc = "Verstecke dich gut!";
             let emoji = "✨";
+            
             const kingdomMatch = namePart.match(/^[\{\[](.*?)[\}\]]\s*(.*)$/);
-            if (kingdomMatch) { kingdomTag = kingdomMatch[1].trim().toUpperCase(); namePart = kingdomMatch[2].trim(); }
-            const descMatch = namePart.match(/^(.*?)\s*\((.*?)\)$/);
-            if (descMatch) { namePart = descMatch[1].trim(); desc = descMatch[2].trim(); }
-            const keycapMatch = namePart.match(/^([0-9#*]\uFE0F?\u20E3)/);
-            if (keycapMatch) { emoji = keycapMatch[1]; namePart = namePart.substring(emoji.length).trim(); }
-            else {
-                const emojiRegex = /^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])[\ufe00-\ufe0f\u200d]*/;
-                const emMatch = namePart.match(emojiRegex);
-                if (emMatch) { emoji = emMatch[0]; namePart = namePart.substring(emoji.length).trim(); }
+            if (kingdomMatch) { 
+                kingdomTag = kingdomMatch[1].trim().toUpperCase(); 
+                namePart = kingdomMatch[2].trim(); 
             }
+            
+            const descMatch = namePart.match(/^(.*?)\s*\((.*?)\)$/);
+            if (descMatch) { 
+                namePart = descMatch[1].trim(); 
+                desc = descMatch[2].trim(); 
+            }
+            
+            // LOGIK FÜR EINHEITLICHE REIHE-BUCHSTABEN (A, B, C, D, E)
+            const rowEmojiMatch = namePart.match(/^(🅰️|🅱️|©️|🇩|🇪)/);
+            if (rowEmojiMatch) {
+                const foundEmoji = rowEmojiMatch[1];
+                let letter = "B";
+                if(foundEmoji === "🅰️") letter = "A";
+                if(foundEmoji === "©️") letter = "C";
+                if(foundEmoji === "🇩") letter = "D";
+                if(foundEmoji === "🇪") letter = "E";
+                
+                emoji = `<span class="custom-block-emoji">${letter}</span>`;
+                namePart = namePart.substring(foundEmoji.length).trim();
+            } else {
+                const keycapMatch = namePart.match(/^([0-9#*]\uFE0F?\u20E3)/);
+                if (keycapMatch) {
+                    emoji = keycapMatch[1];
+                    namePart = namePart.substring(emoji.length).trim();
+                } else {
+                    const emojiRegex = /^(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])[\ufe00-\ufe0f\u200d]*/;
+                    const emMatch = namePart.match(emojiRegex);
+                    if (emMatch) {
+                        emoji = emMatch[0];
+                        namePart = namePart.substring(emoji.length).trim();
+                    }
+                }
+            }
+            
             return { kingdomTag, emoji, name: namePart || "CHALLENGE", desc };
+        }
+
+        let kingdomWinner = "";
+        function prepareKingdomSlots() {
+            const reel = document.getElementById('kingdom-reel');
+            const initialSlot = reel.firstElementChild;
+            
+            // Anzahl der Vortäuschungselemente erhöht, um den längeren Spin auszufüllen
+            const spinCount = 27;
+            let itemsHtml = '';
+            for (let i = 0; i < spinCount; i++) {
+                itemsHtml += `<div class="slot-item"><div class="slot-text-only">${kingdoms[Math.floor(Math.random() * kingdoms.length)]}</div></div>`;
+            }
+            kingdomWinner = kingdoms[Math.floor(Math.random() * kingdoms.length)];
+            itemsHtml += `<div class="slot-item"><div class="slot-text-only">${kingdomWinner}</div></div>`;
+            
+            reel.innerHTML = initialSlot.outerHTML + itemsHtml;
         }
 
         function startKingdomSpin() {
             playSlotSound();
             const reel = document.getElementById('kingdom-reel');
-            const spinCount = 20;
-            let reelHtml = '';
-            for (let i = 0; i < spinCount; i++) {
-                reelHtml += `<div class="slot-item"><div class="slot-text-only">${kingdoms[Math.floor(Math.random() * kingdoms.length)]}</div></div>`;
-            }
-            const winner = kingdoms[Math.floor(Math.random() * kingdoms.length)];
-            reelHtml += `<div class="slot-item"><div class="slot-text-only">${winner}</div></div>`;
-            reel.innerHTML = reelHtml;
-            setTimeout(() => { reel.style.transition = 'transform 3.5s cubic-bezier(0.1, 0, 0.2, 1)'; reel.style.transform = `translateY(-${spinCount * 220}px)`; }, 50);
-            setTimeout(() => {
-                document.getElementById('kingdom-winner-name').innerText = winner;
+            const spinCount = 28; 
+
+            // Auf 3.6 Sekunden reduziert, damit die Drehung noch besser mit dem Endsound matched
+            const duration = 3.6;
+            
+            // cubic-bezier(0.25, 1, 0.5, 1) sorgt für rasanten Start und flüssige, kontinuierliche Bewegung
+            reel.style.transition = `transform ${duration}s cubic-bezier(0.25, 1, 0.5, 1)`;
+            reel.style.transform = `translateY(-${spinCount * 220}px)`;
+
+            const reveal = () => {
+                if (!isSpinning) return;
+                clearTimeout(audioTimeout);
+                slotSound.onended = null;
+
+                document.getElementById('kingdom-winner-name').innerText = kingdomWinner;
                 document.getElementById('kingdom-info-panel').classList.add('visible');
                 document.getElementById('kingdom-layout').classList.add('challenge-shift-active');
+                
                 const btn = document.getElementById('kingdom-spin-btn');
                 btn.innerText = "NOCHMAL WÄHLEN";
                 btn.classList.remove('spin-btn-hidden');
                 btn.classList.add('result-state');
                 isSpinning = false;
-            }, 3700);
+            };
+
+            // Das Verschieben zur Seite geschieht, sobald der Drehsounds (onended) fertig ist
+            slotSound.onended = reveal;
+            audioTimeout = setTimeout(reveal, (duration * 1000) + 100);
+        }
+
+        let challengeWinner = null;
+        function prepareChallengeSlots() {
+            const reel = document.getElementById('challenge-reel');
+            const initialSlot = reel.firstElementChild;
+
+            // Pool filtern basierend auf allen Einstellungen (Allgemein, Banned, Subareas)
+            let pool = customChallenges.map(text => {
+                const parsed = parseChallenge(text);
+                return { raw: text, ...parsed };
+            }).filter(p => {
+                // 1. Wenn in Bannliste, dann filtern
+                if (bannedChallengeTexts.includes(p.raw)) return false;
+
+                // 2. Wenn Subarea-Filter aktiv ist und 'subarea' im Text vorkommt, filtern
+                if (noSubareasAllowed && p.raw.toLowerCase().includes('subarea')) return false;
+
+                // 3. Wenn 'Nur Allgemeine Challenges' aktiv ist, nur ALLGEMEIN zulassen
+                if (onlyGeneralChallenges) {
+                    return p.kingdomTag === "ALLGEMEIN";
+                }
+
+                // 4. Kingdom-spezifische Filterung
+                if (!p.kingdomTag || p.kingdomTag === "ALLGEMEIN") return true;
+                return currentKingdom.includes(p.kingdomTag);
+            });
+
+            if (pool.length === 0) pool = [{ name: "Keine Challenges", desc: "Bitte Bannliste oder Kingdom-Auswahl in den Einstellungen prüfen!", emoji: "⚠️" }];
+
+            // Anzahl der Vortäuschungselemente erhöht, um den längeren Spin auszufüllen
+            const spinCount = 31;
+            let itemsHtml = '';
+            for (let i = 0; i < spinCount; i++) {
+                const r = pool[Math.floor(Math.random() * pool.length)];
+                itemsHtml += `<div class="slot-item"><span class="slot-emoji-only">${r.emoji}</span></div>`;
+            }
+
+            challengeWinner = pool[Math.floor(Math.random() * pool.length)];
+            itemsHtml += `<div class="slot-item"><span class="slot-emoji-only">${challengeWinner.emoji}</span></div>`;
+            
+            reel.innerHTML = initialSlot.outerHTML + itemsHtml;
         }
 
         function startChallengeSlot() {
             playSlotSound();
             const reel = document.getElementById('challenge-reel');
-            let pool = customChallenges.map(text => parseChallenge(text)).filter(p => {
-                if (!p.kingdomTag || p.kingdomTag === "ALLGEMEIN") return true;
-                return currentKingdom.includes(p.kingdomTag);
-            });
-            if (pool.length === 0) pool = [{ name: "Keine Challenges", desc: "...", emoji: "⚠️" }];
-            const spinCount = 25;
-            let reelHtml = '';
-            for (let i = 0; i < spinCount; i++) {
-                const r = pool[Math.floor(Math.random() * pool.length)];
-                reelHtml += `<div class="slot-item"><span class="slot-emoji-only">${r.emoji}</span></div>`;
-            }
-            const winner = pool[Math.floor(Math.random() * pool.length)];
-            reelHtml += `<div class="slot-item"><span class="slot-emoji-only">${winner.emoji}</span></div>`;
-            reel.innerHTML = reelHtml;
-            setTimeout(() => { reel.style.transition = 'transform 3.5s cubic-bezier(0.1, 0, 0.2, 1)'; reel.style.transform = `translateY(-${spinCount * 220}px)`; }, 50);
-            setTimeout(() => {
-                document.getElementById('winner-name-text').innerText = winner.name.toUpperCase();
-                document.getElementById('challenge-desc-text').innerText = winner.desc;
+            const spinCount = 32;
+            
+            // Auf 3.6 Sekunden reduziert, damit die Drehung noch besser mit dem Endsound matched
+            const duration = 3.6;
+
+            // cubic-bezier(0.25, 1, 0.5, 1) sorgt für rasanten Start und flüssige, kontinuierliche Bewegung
+            reel.style.transition = `transform ${duration}s cubic-bezier(0.25, 1, 0.5, 1)`;
+            reel.style.transform = `translateY(-${spinCount * 220}px)`;
+
+            const reveal = () => {
+                if (!isSpinning) return;
+                clearTimeout(audioTimeout);
+                slotSound.onended = null;
+
+                let winnerName = challengeWinner.name.toUpperCase();
+                let winnerDesc = challengeWinner.desc;
+
+                // Bei Hardcore-Modus eine zusätzliche allgemeine Challenge kombinieren
+                if (hardcoreModeActive) {
+                    const extraPool = customChallenges.map(text => {
+                        return { raw: text, ...parseChallenge(text) };
+                    }).filter(p => {
+                        return p.kingdomTag === "ALLGEMEIN" && 
+                               p.name.toUpperCase() !== challengeWinner.name.toUpperCase() &&
+                               !bannedChallengeTexts.includes(p.raw) &&
+                               (!noSubareasAllowed || !p.raw.toLowerCase().includes('subarea'));
+                    });
+
+                    if (extraPool.length > 0) {
+                        const extraChallenge = extraPool[Math.floor(Math.random() * extraPool.length)];
+                        winnerName += " + " + extraChallenge.name.toUpperCase();
+                        winnerDesc += " UND: " + extraChallenge.desc;
+                    }
+                }
+
+                document.getElementById('winner-name-text').innerText = winnerName;
+                document.getElementById('challenge-desc-text').innerText = winnerDesc;
                 document.getElementById('challenge-info-panel').classList.add('visible');
                 document.getElementById('challenge-layout').classList.add('challenge-shift-active');
+                
                 const btn = document.getElementById('challenge-spin-btn');
                 btn.innerText = "NOCHMAL SPINNEN";
                 btn.classList.remove('spin-btn-hidden');
                 btn.classList.add('result-state');
                 isSpinning = false;
-            }, 3700);
+            };
+
+            // Das Verschieben zur Seite geschieht erst, wenn der Jingle (onended) abgespielt ist
+            slotSound.onended = reveal;
+            audioTimeout = setTimeout(reveal, (duration * 1000) + 100);
+        }
+
+        let searchWinner = "";
+        function prepareSearchSlots() {
+            const reel = document.getElementById('search-reel');
+            const initialSlot = reel.firstElementChild;
+            
+            // Anzahl der Vortäuschungselemente erhöht, um den längeren Spin auszufüllen
+            const spinCount = 35;
+            let itemsHtml = '';
+            for (let i = 0; i < spinCount; i++) { itemsHtml += `<div class="slot-item"><img src="${players[Math.floor(Math.random() * players.length)]}" class="slot-image"></div>`; }
+            searchWinner = players[Math.floor(Math.random() * players.length)];
+            itemsHtml += `<div class="slot-item"><img src="${searchWinner}" class="slot-image"></div>`;
+            
+            reel.innerHTML = initialSlot.outerHTML + itemsHtml;
         }
 
         function startSearchSlot() {
             playSlotSound();
             const reel = document.getElementById('search-reel');
-            const spinCount = 30;
-            let reelHtml = '';
-            for (let i = 0; i < spinCount; i++) { reelHtml += `<div class="slot-item"><img src="${players[Math.floor(Math.random() * players.length)]}" class="slot-image"></div>`; }
-            const winner = players[Math.floor(Math.random() * players.length)];
-            reelHtml += `<div class="slot-item"><img src="${winner}" class="slot-image"></div>`;
-            reel.innerHTML = reelHtml;
-            setTimeout(() => { reel.style.transition = 'transform 3.5s cubic-bezier(0.1, 0, 0.2, 1)'; reel.style.transform = `translateY(-${spinCount * 220}px)`; }, 50);
-            setTimeout(() => {
+            const spinCount = 36;
+            
+            // Auf 3.6 Sekunden reduziert, damit die Drehung noch besser mit dem Endsound matched
+            const duration = 3.6;
+
+            // cubic-bezier(0.25, 1, 0.5, 1) sorgt für rasanten Start und flüssige, kontinuierliche Bewegung
+            reel.style.transition = `transform ${duration}s cubic-bezier(0.25, 1, 0.5, 1)`;
+            reel.style.transform = `translateY(-${spinCount * 220}px)`;
+
+            const reveal = () => {
+                if (!isSpinning) return;
+                clearTimeout(audioTimeout);
+                slotSound.onended = null;
+
+                // Sucher-Nachteil (Handicap) anzeigen, wenn Option aktiv ist
+                const handicapTextEl = document.getElementById('search-handicap-text');
+                const infoPanel = document.getElementById('search-info-panel');
+                const layout = document.getElementById('search-layout');
+
+                if (seekerHandicapActive) {
+                    const randomHandicap = HANDICAPS[Math.floor(Math.random() * HANDICAPS.length)];
+                    handicapTextEl.innerHTML = `<span style="color:#fff; font-size: 0.8rem; display:block; margin-bottom:5px;">⚠️ SUCHER-NACHTEIL:</span> ${randomHandicap}`;
+                } else {
+                    handicapTextEl.innerHTML = "Bereit machen zum Suchen!";
+                }
+
+                infoPanel.classList.add('visible');
+                layout.classList.add('challenge-shift-active');
+
                 const btn = document.getElementById('search-spin-btn');
                 btn.innerText = "NOCHMAL?";
                 btn.classList.remove('spin-btn-hidden');
                 btn.classList.add('result-state');
                 isSpinning = false;
-            }, 3700);
+            };
+
+            // Das Verschieben zur Seite geschieht erst, wenn der Jingle (onended) abgespielt ist
+            slotSound.onended = reveal;
+            audioTimeout = setTimeout(reveal, (duration * 1000) + 100);
         }
 
         function handleFileUpload(event) {
             const files = event.target.files;
+            let loadedCount = 0;
             for (let file of files) {
                 const reader = new FileReader();
-                reader.onload = (e) => { players.push(e.target.result); renderAvatars(); };
+                reader.onload = (e) => { 
+                    players.push(e.target.result); 
+                    loadedCount++;
+                    if(loadedCount === files.length) {
+                        localStorage.setItem('hns_players', JSON.stringify(players));
+                        renderAvatars();
+                    }
+                };
                 reader.readAsDataURL(file);
             }
         }
 
         function renderAvatars() {
             const container = document.getElementById('avatar-container');
+            if(!container) return;
             container.innerHTML = '';
             players.forEach((p, i) => {
                 const div = document.createElement('div');
                 div.className = 'avatar-wrapper animate-in';
-                div.innerHTML = `<img src="${p}" class="avatar-preview"><button class="remove-btn" onclick="players.splice(${i},1);renderAvatars()">×</button>`;
+                div.innerHTML = `<img src="${p}" class="avatar-preview"><button class="remove-btn" onclick="players.splice(${i},1);localStorage.setItem('hns_players', JSON.stringify(players));renderAvatars()">×</button>`;
                 container.appendChild(div);
             });
         }
@@ -878,7 +1451,13 @@
         function addCustomChallenge() {
             const input = document.getElementById('new-challenge-input');
             const val = input.value.trim();
-            if (val) { customChallenges.unshift(val); localStorage.setItem('hns_challenges', JSON.stringify(customChallenges)); input.value = ''; renderManageList(); }
+            if (val) { 
+                customChallenges.unshift(val); 
+                localStorage.setItem('hns_challenges', JSON.stringify(customChallenges)); 
+                input.value = ''; 
+                renderManageList(); 
+                renderBannlist(); // Aktualisiert Bannliste
+            }
         }
 
         function renderManageList() {
@@ -891,10 +1470,10 @@
                 div.style = "display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid #333; font-size: 0.85rem;";
                 div.innerHTML = `
                     <div style="flex:1">
-                        ${p.emoji} <strong>${p.name.toUpperCase()}</strong> ${p.kingdomTag ? `<span class="type-tag" style="font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:10px; vertical-align:middle; background:var(--neon-blue); color:black;">${p.kingdomTag}</span>` : `<span class="type-tag" style="font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:10px; vertical-align:middle; background:#555;">GLOBAL</span>`}
+                        ${p.emoji} <strong>${p.name.toUpperCase()}</strong> ${p.kingdomTag ? `<span class=\"type-tag tag-kingdom\">${p.kingdomTag}</span>` : `<span class=\"type-tag tag-global\">GLOBAL</span>`}
                         <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">${p.desc}</div>
                     </div>
-                    <button style="background:none; border:none; color:var(--neon-red); cursor:pointer; font-weight:bold; padding: 10px;" onclick="customChallenges.splice(${i},1);localStorage.setItem('hns_challenges', JSON.stringify(customChallenges));renderManageList();">DEL</button>
+                    <button style="background:none; border:none; color:var(--neon-red); cursor:pointer; font-weight:bold; padding: 10px;" onclick="customChallenges.splice(${i},1);localStorage.setItem('hns_challenges', JSON.stringify(customChallenges));renderManageList();renderBannlist();">DEL</button>
                 `;
                 list.appendChild(div);
             });
@@ -905,11 +1484,12 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
-                const lines = e.target.result.split('\n').map(l => l.trim()).filter(l => l.length > 0 && !l.startsWith('{'));
+                const lines = e.target.result.split('\n').map(l => l.trim()).filter(l => l.length > 0 && !l.startsWith('//'));
                 if(lines.length > 0) {
                     customChallenges = [...lines, ...customChallenges];
                     localStorage.setItem('hns_challenges', JSON.stringify(customChallenges));
                     renderManageList();
+                    renderBannlist(); // Aktualisiert Bannliste
                     const msg = document.getElementById('status-msg');
                     msg.style.display = 'block'; setTimeout(() => msg.style.display = 'none', 3000);
                 }
